@@ -34,7 +34,7 @@ func ShortenURL(c *fiber.Ctx) error{
 	if err != redis.Nil{
 		_ = r2.Set(database.Ctx, c.IP(), os.Getenv("API_QUOTA"), 30*60*time.Second).Err() 
 	}else{
-		val, _ := r2.Get(datbase.Ctx, c.IP()).Result()
+		// val, _ := r2.Get(datbase.Ctx, c.IP()).Result()
 		valInt := strconv.Atoi(val)
 		if valInt <= 0{
 			limit, _ := r2.TTK(database.Ctx, c.IP()).Result()
@@ -82,5 +82,22 @@ func ShortenURL(c *fiber.Ctx) error{
 		 return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error":"unable to connect to database"})
 	 }
 
+	 resp := response{
+		 URL:			body.URL,
+		 CustomShort:	"".
+		 Expiry: body.Expiry.
+		 XrateReaminimg: 10,
+		 XrateLimitReset: 30,
+	 }
+
 	r2.Decr(database.Ctx, c.IP())
+
+	val, _ = r2.Get(database.Ctx, c.IP()).Result() 
+	resp.XrateReaminimg, _ = strconv.Atoi(val)
+	ttl, _ := r2.TTL(database.Ctx, c.IP()).Result()
+	resp.XrateLimitReset = ttl / time.Nanosecond / time.Minute
+
+	resp.CustomShort = os.Getenv("DOMAIN") + "/" + id
+
+	return c.Status(fiber.StatusOK).JSON(resp)
 }
