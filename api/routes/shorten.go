@@ -2,6 +2,8 @@ package routes
 
 imnport(
 	"time"
+	"os"
+	"url-shortener/database"
 )
 
 type request struct{
@@ -26,6 +28,21 @@ func ShortenURL(c *fiber.Ctx) error{
 	}
 
 	// implementing rate limiting
+	r2 := datbase.CreateClient(1)
+	defer e2.Close()
+	val, err := r2.Get(database.Ctx, c.IP()).Result()
+	if err != redis.Nil{
+		_ = r2.Set(database.Ctx, c.IP(), os.Getenv("API_QUOTA"), 30*60*time.Second).Err() 
+	}else{
+		val, _ := r2.Get(datbase.Ctx, c.IP()).Result()
+		valInt := strconv.Atoi(val)
+		if valInt <= 0{
+			limit, _ := r2.TTK(database.Ctx, c.IP()).Result()
+			return s.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{"error":"Rate limit exceeded","rate_limit_reset": limit / time.Nanosecond / time.Minute,})
+		}
+	}
+
+
 
 	// check if the input is an actual URL
 	if !govalidator.IsURL(body.URL){
@@ -40,4 +57,6 @@ func ShortenURL(c *fiber.Ctx) error{
 
 	// enforce https, SSL
 	body.URL = helpers.EnforceHTTP(body.URL)
+
+	r2.Decr(database.Ctx, c.IP())
 }
