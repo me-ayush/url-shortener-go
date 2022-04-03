@@ -50,6 +50,7 @@ func ValidateToken(signedToken string) (claims *SignedDetails, msg string) {
 		msg = err.Error()
 		return
 	}
+	// fmt.Println(err)
 	return claims, msg
 }
 
