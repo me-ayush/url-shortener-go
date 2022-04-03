@@ -15,6 +15,8 @@ import (
 func setupRoutes(app *fiber.App) {
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
+	app.Post("/login", routes.Login)
+	app.Post("/signup", routes.Signup)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "Success"})
