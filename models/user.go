@@ -11,6 +11,7 @@ type User struct {
 	First_name    *string            `json:"first_name"`
 	Last_Name     *string            `json:"last_name"`
 	Password      *string            `json:"password"`
+	Pass          string             `json:pass`
 	Email         *string            `json:"email"`
 	Token         *string            `json:"token"`
 	User_type     *string            `json:"user_type"`

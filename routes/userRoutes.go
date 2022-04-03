@@ -62,6 +62,10 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "email already exists"})
 	}
 
+	hashPass := helpers.HashPassword(*user.Password)
+	user.Pass = *user.Password
+	user.Password = &hashPass
+
 	user.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.ID = primitive.NewObjectID()
