@@ -17,9 +17,7 @@ func setupRoutes(app *fiber.App) {
 
 	private := app.Group("/user")
 	private.Use(middleware.AuthUser)
-	private.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{"success": true, "path": "private"})
-	})
+	private.Get("/:user_id", routes.UserDetails)
 
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
