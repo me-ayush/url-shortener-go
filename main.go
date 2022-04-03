@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"url-shortener/middleware"
 	"url-shortener/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,14 +14,18 @@ import (
 )
 
 func setupRoutes(app *fiber.App) {
+
+	private := app.Group("/user")
+	private.Use(middleware.AuthUser)
+	private.Get("/", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{"success": true, "path": "private"})
+	})
+
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
 	app.Post("/login", routes.Login)
 	app.Post("/signup", routes.Signup)
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "Success"})
-	})
 }
 
 func main() {
