@@ -10,6 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
 )
 
@@ -38,7 +39,12 @@ func main() {
 		fmt.Println(err)
 	}
 
-	app := fiber.New()
+	// app := fiber.New()
+
+	engine := html.New("./templates", ".html")
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
 
 	app.Use(logger.New())
 

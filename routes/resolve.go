@@ -23,7 +23,9 @@ func ResolveURL(c *fiber.Ctx) error {
 	err := mdb.FindOne(ctx, bson.M{"short": url}).Decode(&urlDetail)
 	defer cancel()
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "short not found"})
+		return c.Status(fiber.StatusNotFound).Render("404", fiber.Map{
+			"Msg": "404 Not Found",
+		})
 	}
 
 	return c.Redirect(urlDetail.URL, 301)
