@@ -18,6 +18,7 @@ func setupRoutes(app *fiber.App) {
 	private := app.Group("/user")
 	private.Use(middleware.AuthUser)
 	private.Get("/:user_id", routes.UserDetails)
+	private.Post("/add", routes.AddURL)
 
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)

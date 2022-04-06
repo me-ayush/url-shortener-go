@@ -12,10 +12,10 @@ func CheckUserType(c *fiber.Ctx, role string) (err error) {
 	fmt.Println(role)
 	err = nil
 	if userType != role {
-		err = errors.New("unathorized to access this resource")
+		err = errors.New("unathorized to access this resource 2")
 		return err
 	}
-	err = errors.New("unathorized to access this resource")
+	// err = errors.New("unathorized to access this resource 3")
 	return err
 }
 
@@ -29,7 +29,7 @@ func MatchuserTypeToUid(c *fiber.Ctx, userId string) (err error) {
 	// fmt.Println(userId)
 
 	if userType == "USER" && uid != userId {
-		err = errors.New("unathorized to access this resource")
+		err = errors.New("unathorized to access this resource 1")
 		return err
 	}
 	err = CheckUserType(c, userType)
