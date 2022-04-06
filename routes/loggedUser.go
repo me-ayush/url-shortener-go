@@ -47,7 +47,14 @@ func AddURL(c *fiber.Ctx) error {
 	userId := c.Locals("uid")
 
 	query := bson.M{"user_id": userId}
-	update := bson.M{"$push": bson.M{"links": resp}}
+	update := bson.M{"$push": bson.M{"links": bson.M{
+		"url_id":        resp.URL_ID,
+		"url":           resp.URL,
+		"short":         resp.Short,
+		"expiry":        resp.Expiry,
+		"xratereaminig": resp.XrateReaminimg,
+		"xratereset":    resp.XrateLimitReset,
+	}}}
 	_, err = mdb.UpdateOne(ctx,
 		query,
 		update,

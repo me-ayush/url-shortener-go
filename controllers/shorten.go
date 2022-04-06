@@ -11,6 +11,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func ShortTheURL(body models.Request) (string, models.Response, error) {
@@ -50,7 +51,7 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 		id = body.Short
 	}
 
-	mdb := database.OpenCollection(database.Client, "url-viewers")
+	mdb := database.OpenCollection(database.Client, "shorten-urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
 	count, err := mdb.CountDocuments(ctx, bson.M{"short": id})
@@ -85,6 +86,7 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 		XrateReaminimg:  10,
 		XrateLimitReset: 30,
 	}
+	resp.URL_ID = primitive.NewObjectID().Hex()
 
 	return "ok", resp, nil
 }

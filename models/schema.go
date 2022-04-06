@@ -13,6 +13,7 @@ type Request struct {
 }
 
 type Response struct {
+	URL_ID          string        `json:"url_id"`
 	URL             string        `json:"url"`
 	Short           string        `json:"short"`
 	Expiry          time.Duration `json:"expiry"`
@@ -33,7 +34,7 @@ type User struct {
 	Created_at    time.Time          `json:"created_at"`
 	Updated_at    time.Time          `json:"updated_at"`
 	User_id       string             `json:"user_id"`
-	// Links         []string           `json:"links"`
+	Links         []Response         `json:"links"`
 }
 
 type ViewUsers struct {

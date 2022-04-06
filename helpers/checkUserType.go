@@ -9,7 +9,7 @@ import (
 
 func CheckUserType(c *fiber.Ctx, role string) (err error) {
 	userType := fmt.Sprint(c.Locals("user_type"))
-	fmt.Println(role)
+	// fmt.Println(role)
 	err = nil
 	if userType != role {
 		err = errors.New("unathorized to access this resource 2")

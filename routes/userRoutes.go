@@ -73,6 +73,8 @@ func Signup(c *fiber.Ctx) error {
 	token, refreshToken, _ := helpers.GenrateAllTokens(*user.Email, *user.First_name, *user.Last_Name, *user.User_type, *&user.User_id)
 	user.Token = &token
 	user.Refresh_token = &refreshToken
+	// var x models.Response
+	user.Links = []models.Response{}
 
 	result, err := mdb.InsertOne(ctx, user)
 	if err != nil {
@@ -80,6 +82,8 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": msg})
 	}
 	defer cancel()
+
+	// mdb.update(ctx, bson.M{"user_id":result.user_id}, { $set : {'myArray': [] }} , {multi:true} )
 
 	return c.Status(fiber.StatusOK).JSON(result)
 }
