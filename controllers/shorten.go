@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 	"url-shortener/database"
 	"url-shortener/helpers"
@@ -72,7 +73,7 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 
 	body.Expiry = body.Expiry * 3600 * time.Second
 
-	_, err = mdb.InsertOne(ctx, body)
+	res, err := mdb.InsertOne(ctx, body)
 	defer cancel()
 	if err != nil {
 		msg := "cannot connect to datavbase"
@@ -86,7 +87,10 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 		XrateReaminimg:  10,
 		XrateLimitReset: 30,
 	}
-	resp.URL_ID = primitive.NewObjectID().Hex()
+	// resp.URL_ID = primitive.NewObjectID().Hex()
+	// x := fmt.Sprint(res.InsertedID)
+	x, _ := res.InsertedID.(primitive.ObjectID)
+	resp.URL_ID = fmt.Sprint(x.Hex())
 
 	return "ok", resp, nil
 }

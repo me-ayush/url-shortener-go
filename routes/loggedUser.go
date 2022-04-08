@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+	"fmt"
 	"time"
 	"url-shortener/controllers"
 	"url-shortener/database"
@@ -64,4 +65,31 @@ func AddURL(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.Status(fiber.StatusOK).JSON(resp)
+}
+
+func DeleteURL(c *fiber.Ctx) error {
+	urlId := c.Params("url_id")
+	userId := c.Params("user_id")
+	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	msg, resp, err := controllers.DelShorten(urlId)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
+	}
+	if resp <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
+	}
+
+	msg, resp, err = controllers.DelFromUSer(urlId, userId)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	fmt.Println(msg, resp, err)
+
+	return c.Status(fiber.StatusOK).JSON(resp)
+
 }
