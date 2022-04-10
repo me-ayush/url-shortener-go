@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"fmt"
 	"time"
 	"url-shortener/controllers"
 	"url-shortener/database"
@@ -88,8 +87,12 @@ func DeleteURL(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	fmt.Println(msg, resp, err)
+	if resp <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
+	}
 
-	return c.Status(fiber.StatusOK).JSON(resp)
+	// fmt.Println(msg, resp, err)
+
+	return c.Status(fiber.StatusOK).JSON(msg)
 
 }

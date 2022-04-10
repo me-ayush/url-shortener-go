@@ -22,7 +22,7 @@ func DelShorten(urlId string) (string, int64, error) {
 		return "Cannot Deleted URL", 0, err
 	}
 
-	return "sucessfully deleted", res.DeletedCount, nil
+	return "sucessfully deleted url", res.DeletedCount, nil
 }
 
 func DelFromUSer(urlId string, userId string) (string, int64, error) {
@@ -42,6 +42,6 @@ func DelFromUSer(urlId string, userId string) (string, int64, error) {
 		return "URL Not Found", 0, err
 	}
 
-	return "successfully deleted", result.ModifiedCount, nil
+	return "successfully deleted from user", result.ModifiedCount, nil
 
 }
