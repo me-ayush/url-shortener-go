@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Navbar, Nav } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 
 
-
 const Header = () => {
-    const [user, setUser] = useState('Test User')
+    const [user, setUser] = useState('No User')
     const nav = useNavigate()
+
+    useEffect(() => {
+        if(localStorage.getItem("user")){
+            let x = localStorage.getItem("user")
+            x = x.slice(1, x.length -1)
+            setUser(x)
+        }
+    }, [])
+    
 
     const handleLogout = function () {
         localStorage.clear()
@@ -51,7 +59,7 @@ const Header = () => {
                                 <ul className="navbar-nav">
                                     <li className="nav-item dropdown text-right active">
                                         <a className="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {user && user}
+                                            {user && user} 
                                         </a>
                                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                             <li> <Link className="dropdown-item" to="/profile">Profile</Link></li>
