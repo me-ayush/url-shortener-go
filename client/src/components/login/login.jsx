@@ -13,12 +13,12 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         let f = 0
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-            document.getElementById('floatingInput').classList.remove('is-invalid')
-        }else{
-            document.getElementById('floatingInput').classList.add('is-invalid')
-            f = 1
-        }
+        // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+        //     document.getElementById('floatingInput').classList.remove('is-invalid')
+        // }else{
+        //     document.getElementById('floatingInput').classList.add('is-invalid')
+        //     f = 1
+        // }
 
         if(password == ''){
             document.getElementById('floatingPassword').classList.add('is-invalid')
@@ -42,7 +42,7 @@ const Login = () => {
         })
 
         const data = await res.json();
-        console.log(data)
+        // console.log(data)
 
         if (res.status === 400 || !data) {
             window.alert(data.error);

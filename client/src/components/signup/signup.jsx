@@ -5,13 +5,16 @@ import { useNavigate } from 'react-router-dom'
 import Logo from './img.svg'
 
 const Signup = () => {
+
+    const nav = useNavigate();
+
     const [first, setFirst] = useState('')
     const [second, setSecond] = useState('')
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
     const [cpass, setCpass] = useState('')
 
-    const handleSignup = (e) => {
+    const handleSignup = async(e) => {
         e.preventDefault();
 
 
@@ -76,8 +79,37 @@ const Signup = () => {
         if(f == 1){
             return
         }
-
         console.log(first, second, email, pass, cpass)
+
+        const res = await fetch('/signup',{
+            method: "POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                "first_name":first,
+                "last_name": second,
+                "email":email,
+                "password":pass,
+                "User_type":"USER",
+            })
+        })
+
+        const data = await res.json()
+        if(res.status === 400 || !data){
+            window.alert(data.error)
+        }else{
+            localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
+            localStorage.setItem('id', JSON.stringify(data.user_id))
+            localStorage.setItem('token', JSON.stringify(data.token))
+            window.alert('Signup Successfully')
+            nav('/')
+        }
+
+
+
+
+
     }
 
     return (
