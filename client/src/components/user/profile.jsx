@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../navbar'
 import { useNavigate, Link } from 'react-router-dom'
+import swal from 'sweetalert';
+
 
 const Profile = () => {
+  const nav = useNavigate()
   const [detail, setDetail] = useState({})
 
-  const check_auth = async () => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const user_id = JSON.parse(localStorage.getItem("id"))
+  const token = JSON.parse(localStorage.getItem('token'))
+  const user_id = JSON.parse(localStorage.getItem("id"))
+  const user = JSON.parse(localStorage.getItem("user"))
 
-    if (!token || !user_id) {
-      window.alert('First Login...')
-      navigate("/login")
-    } else {
+  const check_auth = async () => {
       try {
         const res = await fetch(`/user/${user_id}`, {
           method: "GET",
@@ -24,9 +24,10 @@ const Profile = () => {
         });
 
         const data = await res.json();
-        if (res.status === 500 || !data) {
-          window.alert(data.error)
-          // navigate("/login")
+        if (res.status != 400 || !data) {
+    			swal(data.error, "", "error");
+          localStorage.clear()
+          nav("/login")
         } else {
           setDetail({
             first: data.first_name,
@@ -39,13 +40,20 @@ const Profile = () => {
         console.warn(err);
       }
 
-    }
 
   }
 
   useEffect(() => {
-    check_auth()
-    console.log(detail)
+    // console.log(token, user_id, user)
+    if (!token || !user_id || !user || token=='' || user_id == '' || user == '') {
+      localStorage.clear()
+			swal("Wrong Credentials", "", "error");
+			nav("/login")
+    }else{
+      check_auth()
+    }
+
+    // console.log(detail)
   }, [])
 
 

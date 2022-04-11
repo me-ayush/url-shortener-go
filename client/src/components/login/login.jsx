@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import Header from '../navbar/index'
 import { useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
-
 import Logo from './img.svg'
+import swal from 'sweetalert';
+
 
 const Login = () => {
     const [email, setEmail] = useState('')
@@ -20,13 +21,13 @@ const Login = () => {
         //     f = 1
         // }
 
-        if(password == ''){
+        if (password == '') {
             document.getElementById('floatingPassword').classList.add('is-invalid')
             f = 1
-        }else{
+        } else {
             document.getElementById('floatingPassword').classList.remove('is-invalid')
         }
-        if(f == 1){
+        if (f == 1) {
             return
         }
 
@@ -44,13 +45,14 @@ const Login = () => {
         const data = await res.json();
         // console.log(data)
 
-        if (res.status === 400 || !data) {
-            window.alert(data.error);
+        if (res.status != 200 || !data) {
+            // window.alert(data.error);
+            swal("Login Error", data.error, "error");
         } else {
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
             localStorage.setItem('id', JSON.stringify(data.user_id))
             localStorage.setItem('token', JSON.stringify(data.token))
-            window.alert('ok')
+            swal("Login Successfull", '', "success");
             nav('/')
         }
     }
@@ -77,15 +79,15 @@ const Login = () => {
                                                 <input type="text" className="form-control " id="floatingInput" placeholder="name@example.com" onChange={(e) => { setEmail(e.target.value) }} />
                                                 <label htmlFor="floatingInput">Email address</label>
                                             </div>
-
                                         </div>
+
                                         <div className="form-group last mb-4">
                                             <div className="form-floating mb-3">
                                                 <input type="password" className="form-control" id="floatingPassword" placeholder="Password" onChange={(e) => { setPassword(e.target.value) }} />
                                                 <label htmlFor="floatingPassword">Password</label>
                                             </div>
-
                                         </div>
+                                        
                                         <button type="submit" value="Log In" className="btn btn-block btn-primary" > Log In</button>
                                         <span className="d-block text-left my-4 text-muted">&mdash; Don't have an account? &mdash; <Link className='text-decoration-none' to="/signup">Create a Account</Link> </span>
                                     </form>

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import Header from '../navbar/index'
 import { useNavigate } from 'react-router-dom'
 import Logo from './img.svg'
+import swal from 'sweetalert';
+
 
 const Signup = () => {
 
@@ -14,102 +16,71 @@ const Signup = () => {
     const [pass, setPass] = useState('')
     const [cpass, setCpass] = useState('')
 
-    const handleSignup = async(e) => {
+    const handleSignup = async (e) => {
         e.preventDefault();
-
-
-        // (function () {
-        //     'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            // var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-        //     Array.prototype.slice.call(forms)
-        //         .forEach(function (form) {
-        //             form.addEventListener('submit', function (event) {
-        //                 if (!form.checkValidity()) {
-        //                     event.preventDefault()
-        //                     event.stopPropagation()
-        //                 }
-        //                 form.classList.add('was-validated')
-        //                 console.log(form.classList)
-        //             }, false)
-        //         })
-        // })()
-
-
-
         let f = 0
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
             document.getElementById('email').classList.remove('is-invalid')
-        }else{
+        } else {
             document.getElementById('email').classList.add('is-invalid')
             f = 1
         }
-        
-        if(first == ''){
+
+        if (first == '') {
             document.getElementById('firstname').classList.add('is-invalid')
             f = 1
-        }else{
+        } else {
             document.getElementById('firstname').classList.remove('is-invalid')
         }
 
-        if(second == ''){
+        if (second == '') {
             document.getElementById('lastname').classList.add('is-invalid')
             f = 1
-        }else{
+        } else {
             document.getElementById('lastname').classList.remove('is-invalid')
         }
 
-        if(pass == ''){
+        if (pass == '') {
             document.getElementById('password').classList.add('is-invalid')
             f = 1
-        }else{
+        } else {
             document.getElementById('password').classList.remove('is-invalid')
         }
 
-        if(cpass == '' || cpass!=pass){
+        if (cpass == '' || cpass != pass) {
             document.getElementById('cpassword').classList.add('is-invalid')
             f = 1
-        }else{
+        } else {
             document.getElementById('cpassword').classList.remove('is-invalid')
         }
 
-        if(f == 1){
+        if (f == 1) {
             return
         }
-        console.log(first, second, email, pass, cpass)
+        // console.log(first, second, email, pass, cpass)
 
-        const res = await fetch('/signup',{
+        const res = await fetch('/signup', {
             method: "POST",
-            headers:{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "first_name":first,
+                "first_name": first,
                 "last_name": second,
-                "email":email,
-                "password":pass,
-                "User_type":"USER",
+                "email": email,
+                "password": pass,
+                "User_type": "USER",
             })
         })
 
         const data = await res.json()
-        if(res.status === 400 || !data){
-            window.alert(data.error)
-        }else{
-            localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
-            localStorage.setItem('id', JSON.stringify(data.user_id))
-            localStorage.setItem('token', JSON.stringify(data.token))
-            window.alert('Signup Successfully')
-            nav('/')
+        if (res.status !== 200 || !data) {
+            swal(data.error, "", "error");
+
+        } else {
+            swal("Signup Successfully", "", "success");
+            nav('/login')
         }
-
-
-
-
-
     }
 
     return (
@@ -127,48 +98,48 @@ const Signup = () => {
                                     <div className="mb-4">
                                         <h3>Create a New Account</h3>
                                     </div>
-                                    <form class="row g-3 " method='post' onSubmit={(e) => { handleSignup(e) }}>
-                                        <div class="col-md-6 form-floating px-1 ">
+                                    <form className="row g-3 " method='post' onSubmit={(e) => { handleSignup(e) }}>
+                                        <div className="col-md-6 form-floating px-1 ">
                                             <input type="text" className="form-control " id="firstname" placeholder="First Name" onChange={(e) => { setFirst(e.target.value) }} />
                                             <label htmlFor="firstname">First Name</label>
-                                            <div class="invalid-feedback">
+                                            <div className="invalid-feedback">
                                                 Please Enter First Name.
                                             </div>
-                                            <div class="valid-feedback">
+                                            <div className="valid-feedback">
                                                 Looks good!
                                             </div>
                                         </div>
-                                        <div class="col-md-6 form-floating px-1">
+                                        <div className="col-md-6 form-floating px-1">
                                             <input type="text" className="form-control " id="lastname" placeholder="Last Name" onChange={(e) => { setSecond(e.target.value) }} />
                                             <label htmlFor="lastname">Last Name</label>
-                                            <div class="invalid-feedback">
+                                            <div className="invalid-feedback">
                                                 Please Enter Last Name.
                                             </div>
                                         </div>
-                                        <div class="col-12 form-floating px-1">
-                                            <input type="text" class="form-control" id="email" placeholder="name@domain.com" onChange={(e) => { setEmail(e.target.value) }} />
-                                            <label for="email" class="form-label">Email</label>
-                                            <div class="invalid-feedback">
+                                        <div className="col-12 form-floating px-1">
+                                            <input type="text" className="form-control" id="email" placeholder="name@domain.com" onChange={(e) => { setEmail(e.target.value) }} />
+                                            <label htmlFor="email" className="form-label">Email</label>
+                                            <div className="invalid-feedback">
                                                 Please Enter Correct Email.
                                             </div>
                                         </div>
-                                        <div class="col-12 form-floating px-1">
-                                            <input type="password" class="form-control" id="password" placeholder="Password" onChange={(e) => { setPass(e.target.value) }} />
-                                            <label for="password" class="form-label">Password</label>
-                                            <div class="invalid-feedback">
+                                        <div className="col-12 form-floating px-1">
+                                            <input type="password" className="form-control" id="password" placeholder="Password" onChange={(e) => { setPass(e.target.value) }} />
+                                            <label htmlFor="password" className="form-label">Password</label>
+                                            <div className="invalid-feedback">
                                                 Please Enter Password.
                                             </div>
                                         </div>
-                                        <div class="col-12 form-floating px-1">
-                                            <input type="password" class="form-control" id="cpassword" placeholder="Password" onChange={(e) => { setCpass(e.target.value) }} />
-                                            <label for="cpassword" class="form-label">Confirm Password</label>
-                                            <div class="invalid-feedback">
+                                        <div className="col-12 form-floating px-1">
+                                            <input type="password" className="form-control" id="cpassword" placeholder="Password" onChange={(e) => { setCpass(e.target.value) }} />
+                                            <label htmlFor="cpassword" className="form-label">Confirm Password</label>
+                                            <div className="invalid-feedback">
                                                 Password do Not Matched.
                                             </div>
                                         </div>
 
-                                        <div class="col-12 form-floating px-1">
-                                            <button type="submit" class="btn py-3 btn-primary btn-block w-100">Create My Account</button>
+                                        <div className="col-12 form-floating px-1">
+                                            <button type="submit" className="btn py-3 btn-primary btn-block w-100">Create My Account</button>
                                         </div>
                                         <span className="d-block text-left my-4 text-muted">&mdash; Already have an account? &mdash; <Link className='text-decoration-none' to="/login">Login Now</Link> </span>
 

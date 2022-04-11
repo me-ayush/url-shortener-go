@@ -1,0 +1,26 @@
+
+#home {
+    height: 94vh;
+    .banner {
+        background-image: url(./banner-bg.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        // padding: 300px 0px;
+        // height: 880px;
+        height: inherit;
+        background-position: center center;
+        
+        overflow-y: hidden;
+        // object-fit: cover
+    }
+
+    .banner .caption h2 {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0px;
+        margin-bottom: 50px;
+        font-size: 32px;
+        font-weight: 700;
+        color: #fff;
+    }
+}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Header from '../navbar/index'
+import swal from 'sweetalert';
 
 const Addurl = () => {
     const [url, setUrl] = useState('')
@@ -28,17 +29,15 @@ const Addurl = () => {
 				});
 
 				const data = await res.json();
-				if (res.status === 400 || !data) {
-					window.alert(data.error)
-					// navigate("/login")
+				if (res.status != 200 || !data) {
+                    swal(data.error, "", "error");
 				} else {
-					// console.log(data)
-                    alert('Short Added')
+                    swal("Short Added", "", "success");
 				}
 			} catch (err) {
-				console.warn(err);
+                swal(err, "", "error");
+                // console.warn(err);
 			}
-
 		}
 
     }

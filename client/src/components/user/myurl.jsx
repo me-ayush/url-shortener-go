@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../navbar'
 import './table.scss'
+import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
+
 
 const Myurl = () => {
+	const nav = useNavigate()
 	const [links, setLinks] = useState('')
 	const domain = "http://localhost:3000"
 
@@ -12,17 +16,14 @@ const Myurl = () => {
 	const getMinute = (millis) => {
 		var minutes = Math.floor(millis / 60000);
 		var seconds = ((millis % 60000) / 1000).toFixed(0);
-		//ES6 interpolated literals/template literals 
-		//If seconds is less than 10 put a zero in front.
-		// return `${minutes}:${(seconds < 10 ? "0" : "")}${seconds}`;
 		return millis
 	}
 
 	const set_links = async () => {
 
 		if (!token || !user_id) {
-			window.alert('First Login...')
-			navigate("/login")
+			swal("Wrong Credentials", "", "error");
+			nav("/login")
 		} else {
 			try {
 				const res = await fetch(`/user/${user_id}`, {
@@ -35,11 +36,9 @@ const Myurl = () => {
 				});
 
 				const data = await res.json();
-				if (res.status === 500 || !data) {
-					window.alert(data.error)
-					// navigate("/login")
+				if (res.status !== 200 || !data) {
+                    swal(data.error, "", "error");
 				} else {
-					// console.log(data)
 					setLinks(data.links)
 				}
 			} catch (err) {
@@ -66,10 +65,10 @@ const Myurl = () => {
 		})
 		const data = await res.json()
 		// console.log(data)
-		if (res.status === 500 || !data) {
-			window.alert(data.error)
-		  } else {
-			window.alert('deleted')
+		if (res.status !== 200 || !data) {
+			swal(data.error, "", "error");
+		} else {
+			swal("Successfully Deleted", "", "success");
 			set_links()
 		  }
 	}
