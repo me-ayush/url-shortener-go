@@ -1,14 +1,75 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../navbar/index'
 
 const Addurl = () => {
+    const [url, setUrl] = useState('')
+    const [custom, setCustom] = useState('')
+    
+	const token = JSON.parse(localStorage.getItem('token'))
+	const user_id = JSON.parse(localStorage.getItem("id"))
+
+    const handleAdd = async(e) => {
+        e.preventDefault()
+        if (!token || !user_id) {
+			window.alert('First Login...')
+			navigate("/login")
+		} else {
+			try {
+				const res = await fetch(`/user/${user_id}/add`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"token": token,
+					},
+                    body:JSON.stringify({
+                        "url": url,
+                        "short":custom,
+                    })
+				});
+
+				const data = await res.json();
+				if (res.status === 400 || !data) {
+					window.alert(data.error)
+					// navigate("/login")
+				} else {
+					// console.log(data)
+                    alert('Short Added')
+				}
+			} catch (err) {
+				console.warn(err);
+			}
+
+		}
+
+    }
+
     return (
         <>
             <Header />
-            <div>
-                <h1>
-                    Addurl
-                </h1>
+            <div className='container mt-5'>
+                <form method='POST' onSubmit={(e) => handleAdd(e)} autoComplete="false">
+                    <div className="row">
+                        <div className="col">
+                            <div className="form-group first">
+                                <div className="form-floating mb-3">
+                                    <input type="text" className="form-control " id="url" placeholder="Enter URL" onChange={(e) => { setUrl(e.target.value) }} />
+                                    <label htmlFor="url">Enter URL</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="form-group last mb-4">
+                                <div className="form-floating mb-3">
+                                    <input type="text" className="form-control" id="custom" placeholder="Custom Short (Optional)" onChange={(e) => { setCustom(e.target.value) }} />
+                                    <label htmlFor="custom">Custom Short (Optional)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <button className='btn btn-success mb-3 p-3'>Add This URL</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </>
     )

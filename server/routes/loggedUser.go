@@ -32,6 +32,13 @@ func UserDetails(c *fiber.Ctx) error {
 
 func AddURL(c *fiber.Ctx) error {
 	body := new(models.Request)
+
+	userId := c.Params("user_id")
+
+	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON"})
 	}
@@ -44,7 +51,7 @@ func AddURL(c *fiber.Ctx) error {
 	mdb := database.OpenCollection(database.Client, "users")
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
-	userId := c.Locals("uid")
+	// userId := c.Locals("uid")
 
 	query := bson.M{"user_id": userId}
 	update := bson.M{"$push": bson.M{"links": bson.M{

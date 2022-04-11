@@ -65,7 +65,7 @@ const Myurl = () => {
 			}
 		})
 		const data = await res.json()
-		console.log(data)
+		// console.log(data)
 		if (res.status === 500 || !data) {
 			window.alert(data.error)
 		  } else {
