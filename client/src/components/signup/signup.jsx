@@ -78,8 +78,10 @@ const Signup = () => {
             swal(data.error, "", "error");
 
         } else {
-            swal("Signup Successfully", "", "success");
-            nav('/login')
+            swal("Signup Successfully", "", "success").then((e)=>{
+                nav('/login')
+              });
+            // nav('/login')
         }
     }
 

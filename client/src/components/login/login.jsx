@@ -52,8 +52,10 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
             localStorage.setItem('id', JSON.stringify(data.user_id))
             localStorage.setItem('token', JSON.stringify(data.token))
-            swal("Login Successfull", '', "success");
-            nav('/')
+            swal("Login Successfull", '', "success").then((e)=>{
+                nav('/')
+              });
+            // nav('/')
         }
     }
 
