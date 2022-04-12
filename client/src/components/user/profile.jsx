@@ -24,7 +24,7 @@ const Profile = () => {
         });
 
         const data = await res.json();
-        if (res.status != 400 || !data) {
+        if (res.status != 200 || !data) {
     			swal(data.error, "", "error");
           localStorage.clear()
           nav("/login")
@@ -52,7 +52,6 @@ const Profile = () => {
     }else{
       check_auth()
     }
-
     // console.log(detail)
   }, [])
 

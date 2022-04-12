@@ -43,9 +43,9 @@ const Header = () => {
                             </li>
                             {localStorage.getItem("token") ?
                                 <>
-                                    <li className="nav-item">
+                                    {/* <li className="nav-item">
                                         <Link className="nav-link active" to="/addurl">Add URL</Link>
-                                    </li>
+                                    </li> */}
                                     <li className="nav-item">
                                         <Link className="nav-link active" to="/myurl">My URL</Link>
                                     </li>
