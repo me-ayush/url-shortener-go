@@ -12,10 +12,20 @@ const Home = () => {
   const [custom, setCustom] = useState('')
   const domain = "http://localhost:3001/"
 
+  
+	var token = ''
+	var user_id = ''
+	token = JSON.parse(localStorage.getItem('token'))
+	user_id = JSON.parse(localStorage.getItem("id"))
+
+
   const handleAdd = async (e) => {
     e.preventDefault()
 
-    const res = await fetch("/api/v1", {
+    var res = ''
+
+    if (!token || !user_id) {
+    res = await fetch("/api/v1", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,6 +35,20 @@ const Home = () => {
         "short": custom,
       })
     });
+  }else{
+    res = await fetch(`/user/${user_id}/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "token": token
+      },
+      body: JSON.stringify({
+        "url": url,
+        "short": custom,
+      })
+    });
+
+  }
 
     const data = await res.json();
     if (res.status != 200 || !data) {
