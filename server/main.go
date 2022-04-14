@@ -22,6 +22,10 @@ func setupRoutes(app *fiber.App) {
 	private.Post("/:user_id/add", routes.AddURL)
 	private.Post("/:user_id/delete/:url_id", routes.DeleteURL)
 
+	admin := app.Group("/admin")
+	admin.Use(middleware.AuthAdmin)
+	admin.Get("/users", routes.AllUsers)
+
 	app.Get("/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
 	app.Post("/login", routes.Login)
