@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"errors"
 	"fmt"
 	"url-shortener/controllers"
 	"url-shortener/helpers"
@@ -8,13 +9,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func AllUsers(c *fiber.Ctx) error {
+func validateAdmin(c *fiber.Ctx) error {
 	adminId := c.Get("id")
 	userType := fmt.Sprint(c.Locals("user_type"))
 	uid := fmt.Sprint(c.Locals("uid"))
 
 	if err := helpers.CheckAdmin(adminId, userType, uid); err != "ok" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err})
+		return errors.New(err)
+	}
+	return nil
+}
+
+func AllUsers(c *fiber.Ctx) error {
+
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	allUsers, msg := controllers.GetAllUsers()
@@ -23,4 +32,18 @@ func AllUsers(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(allUsers)
+}
+
+func AllLinks(c *fiber.Ctx) error {
+
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	allLinks, msg := controllers.GetAllLinks()
+	if msg != "ok" {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": msg})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(allLinks)
 }
