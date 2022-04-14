@@ -6,7 +6,11 @@ import swal from 'sweetalert';
 
 const Profile = () => {
   const nav = useNavigate()
-  const [detail, setDetail] = useState({})
+  const [detail, setDetail] = useState({
+    first: "",
+    email:"",
+    last:"",
+  })
 
   const token = JSON.parse(localStorage.getItem('token'))
   const user_id = JSON.parse(localStorage.getItem("id"))
@@ -70,11 +74,11 @@ const Profile = () => {
                 <h4 className="text-right">Profile Settings</h4>
               </div>
               <div className="row mt-2">
-                <div className="col-md-6"><label className="labels">First Name</label><input type="text" className="form-control" placeholder="First name" value={detail.first}/></div>
-                <div className="col-md-6"><label className="labels">Last Name</label><input type="text" className="form-control" placeholder="Last Name" value={detail.last}/></div>
+                <div className="col-md-6"><label className="labels">First Name</label><input type="text" className="form-control" placeholder="First name" defaultValue={detail && detail.first}/></div>
+                <div className="col-md-6"><label className="labels">Last Name</label><input type="text" className="form-control" placeholder="Last Name" defaultValue={detail && detail.last}/></div>
               </div>
               <div className="row mt-3">
-                <div className="col-md-12"><label className="labels">Email ID</label><input type="text" className="form-control" placeholder="Email ID" value={detail.email}/></div>
+                <div className="col-md-12"><label className="labels">Email ID</label><input type="text" className="form-control" placeholder="Email ID" defaultValue={detail && detail.email}/></div>
               </div>
               {/* <div className="row mt-3">
                 <div className="col-md-6"><label className="labels">Country</label><input type="text" className="form-control" placeholder="Country" /></div>

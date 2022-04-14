@@ -5,11 +5,14 @@ import { Link } from "react-router-dom";
 import Logo from './img.svg'
 import swal from 'sweetalert';
 
+import { useCookies } from 'react-cookie';
+
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const nav = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -52,6 +55,13 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
             localStorage.setItem('id', JSON.stringify(data.user_id))
             localStorage.setItem('token', JSON.stringify(data.token))
+
+            if(data.user_type==="ADMIN"){
+                setCookie('_jwt', Math.floor((Math.random() * 1000000) + 1), { path: '/' });
+            }else{
+                removeCookie('_jwt')
+            }
+
             swal("Login Successfull", '', "success").then((e)=>{
                 nav('/')
               });
