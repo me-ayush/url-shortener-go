@@ -47,3 +47,18 @@ func AllLinks(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(allLinks)
 }
+
+func GetUser(c *fiber.Ctx) error {
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	userId := c.Params("user_id")
+	user, msg := controllers.GetUserDetails(userId)
+
+	if msg != "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": msg})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(user)
+
+}
