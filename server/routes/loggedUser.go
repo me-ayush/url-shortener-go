@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+	"fmt"
 	"time"
 	"url-shortener/controllers"
 	"url-shortener/database"
@@ -102,4 +103,30 @@ func DeleteURL(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(msg)
 
+}
+
+func UpdateProfile(c *fiber.Ctx) error {
+	userId := c.Params("user_id")
+	var user models.UpdateUser
+
+	if err := c.BodyParser(&user); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON in login"})
+	}
+
+	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	msg, resp, err := controllers.UpdateUser(userId, user)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error(), "msg": msg})
+	}
+	if resp <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
+	}
+
+	fmt.Println(msg, resp, err)
+
+	return c.Status(fiber.StatusOK).JSON(msg)
 }

@@ -37,6 +37,15 @@ type User struct {
 	Links         []Response         `json:"links"`
 }
 
+type UpdateUser struct {
+	First_name *string   `json:"first_name"`
+	Last_Name  *string   `json:"last_name"`
+	Password   *string   `json:"password"`
+	Pass       string    `json:"pass"`
+	Email      *string   `json:"email"`
+	Updated_at time.Time `json:"updated_at"`
+}
+
 type ViewUsers struct {
 	Ip    string        `json:"ip,omitempty"`
 	Quota string        `json:"quota,omitempty"`
