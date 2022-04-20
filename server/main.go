@@ -33,6 +33,7 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/api/v1", routes.ShortenURL)
 	app.Post("/login", routes.Login)
 	app.Post("/signup", routes.Signup)
+	app.Post("/contact", routes.Contact)
 
 }
 

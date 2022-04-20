@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"time"
+	"url-shortener/controllers"
 	"url-shortener/database"
 	"url-shortener/helpers"
 	"url-shortener/models"
@@ -86,4 +87,19 @@ func Signup(c *fiber.Ctx) error {
 	// mdb.update(ctx, bson.M{"user_id":result.user_id}, { $set : {'myArray': [] }} , {multi:true} )
 
 	return c.Status(fiber.StatusOK).JSON(result)
+}
+
+func Contact(c *fiber.Ctx) error {
+
+	var message models.Msg
+	if err := c.BodyParser(&message); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON in login"})
+	}
+	msg, err := controllers.StoreMessage(message)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": msg})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(msg)
 }
