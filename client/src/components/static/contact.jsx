@@ -1,12 +1,41 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Header from '../navbar'
 import './contact.scss'
+import swal from 'sweetalert';
 
 
 const Contact = () => {
 
-  const handleContact = (e) => {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [subject, setSubject] = useState('')
+  
+
+  const handleContact = async(e) => {
     e.preventDefault()
+
+    const res = await fetch('/contact',{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        "name":name,
+        "email":email,
+        "subject":subject,
+        "message":message
+      })
+    })
+
+    const data = await res.json()
+
+    if(res.status != 200 || !data){
+      swal(data.error, "", "error");
+    }else{
+      swal("Message Recieved", "", "success")
+    }
+    
   }
 
   return (
@@ -33,7 +62,7 @@ const Contact = () => {
                           <div className="col-md-6">
                             <div className="form-group first">
                               <div className="form-floating mb-3">
-                                <input type="text" className="form-control " id="Name" placeholder="Name" />
+                                <input type="text" className="form-control " id="Name" placeholder="Name" onChange={(e)=>{setName(e.target.value)}} />
                                 <label htmlFor="Name">Name</label>
                               </div>
                             </div>
@@ -41,7 +70,7 @@ const Contact = () => {
                           <div className="col-md-6">
                           <div className="form-group first">
                               <div className="form-floating mb-3">
-                                <input type="text" className="form-control " id="Email" placeholder="name@example.com" />
+                                <input type="text" className="form-control " id="Email" placeholder="name@example.com" onChange={(e)=>{setEmail(e.target.value)}}/>
                                 <label htmlFor="Email">Email</label>
                               </div>
                             </div>
@@ -49,7 +78,7 @@ const Contact = () => {
                           <div className="col-md-12">
                           <div className="form-group first">
                               <div className="form-floating mb-3">
-                                <input type="text" className="form-control " id="Subject" placeholder="name@example.com" />
+                                <input type="text" className="form-control " id="Subject" placeholder="name@example.com" onChange={(e)=>{setSubject(e.target.value)}}/>
                                 <label htmlFor="Subject">Subject</label>
                               </div>
                             </div>
@@ -57,7 +86,7 @@ const Contact = () => {
                           <div className="col-md-12">
                           <div className="form-group first">
                               <div className="form-floating mb-3">
-                              <textarea name="message" className="form-control" id="Message" cols="30" rows="7" placeholder="Message"></textarea>
+                              <textarea name="message" className="form-control" id="Message" cols="30" rows="7" placeholder="Message" onChange={(e)=>{setMessage(e.target.value)}}></textarea>
                                 <label htmlFor="Message">Message</label>
                               </div>
                             </div>

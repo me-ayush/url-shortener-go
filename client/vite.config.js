@@ -8,6 +8,11 @@ export default defineConfig({
     host: true,
     port:3001,
     proxy:{
+      '/contact':{
+        target: 'http://localhost:3000',
+        secure: false,
+        ws: true,
+      },
       '/login':{
         target: 'http://localhost:3000',
         secure: false,
