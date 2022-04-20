@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"fmt"
 	"time"
 	"url-shortener/controllers"
 	"url-shortener/database"
@@ -126,7 +125,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
 	}
 
-	fmt.Println(msg, resp, err)
+	// fmt.Println(msg, resp, err)
 
 	return c.Status(fiber.StatusOK).JSON(msg)
 }
