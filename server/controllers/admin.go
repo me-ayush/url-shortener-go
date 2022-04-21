@@ -92,3 +92,19 @@ func GetAllMessages() ([]primitive.M, string) {
 
 	return allMsg, ""
 }
+
+func DelMessage(urlId string) (string, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	mdb := database.OpenCollection(database.Client, "message")
+
+	id, _ := primitive.ObjectIDFromHex(urlId)
+
+	_, err := mdb.DeleteOne(ctx, bson.M{"_id": id})
+	defer cancel()
+	if err != nil {
+		return "Cannot Deleted URL", err
+	}
+
+	return "Message Successfully Deleted", nil
+}

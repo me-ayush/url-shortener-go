@@ -14,7 +14,7 @@ export const Message = () => {
   const user_id = JSON.parse(localStorage.getItem("id"))
   const user = JSON.parse(localStorage.getItem("user"))
 
-  const getUsers = async () => {
+  const getMessages = async () => {
 
     if (!token || !user_id || !user && cookies._jwt) {
       window.alert('First Login...')
@@ -44,14 +44,14 @@ export const Message = () => {
   }
 
   useEffect(() => {
-    getUsers()
-    console.log(data)
+    getMessages()
+    // console.log(data)
   }, [])
 
   const handleDelete = async(e) =>{
     // console.log(e.target.value)
     try{
-    const res = await fetch(`/admin/messages/${e.target.value}`,{
+    const res = await fetch(`/admin/message/${e.target.value}`,{
       method:"POST",
       headers:{
         "Content-Type": "application/json",
@@ -66,9 +66,11 @@ export const Message = () => {
           swal(data.error, "", "error");
         } else {
           swal("Message Deleted", "", "success");
+          getMessages()
         }
       }catch(e){
         swal("Something Went Wrong", "", "error");
+        // setdata(data)
       }
   }
 

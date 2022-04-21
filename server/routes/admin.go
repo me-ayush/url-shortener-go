@@ -75,3 +75,18 @@ func GetMessages(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(allMsg)
 }
+
+func DeleteMessage(c *fiber.Ctx) error {
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	urlID := c.Params("url_id")
+	msg, err := controllers.DelMessage(urlID)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(msg)
+
+}

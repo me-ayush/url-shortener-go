@@ -28,6 +28,7 @@ func setupRoutes(app *fiber.App) {
 	admin.Get("/users", routes.AllUsers)
 	admin.Get("/links", routes.AllLinks)
 	admin.Get("/message", routes.GetMessages)
+	admin.Post("/message/:url_id", routes.DeleteMessage)
 	admin.Get("/users/:user_id", routes.GetUser)
 
 	app.Get("/:url", routes.ResolveURL)
