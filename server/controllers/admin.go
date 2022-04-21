@@ -68,3 +68,27 @@ func GetUserDetails(userid string) (models.User, string) {
 
 	return user, ""
 }
+
+func GetAllMessages() ([]primitive.M, string) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	mdb := database.OpenCollection(database.Client, "message")
+
+	result, err := mdb.Find(ctx, bson.D{})
+	defer cancel()
+
+	var allMsg []primitive.M
+
+	if err != nil {
+		return allMsg, fmt.Sprint(err.Error())
+	}
+
+	for result.Next(ctx) {
+		var x bson.M
+		if err := result.Decode(&x); err != nil {
+			return allMsg, fmt.Sprint(err)
+		}
+		allMsg = append(allMsg, x)
+	}
+
+	return allMsg, ""
+}

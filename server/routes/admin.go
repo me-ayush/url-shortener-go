@@ -62,3 +62,16 @@ func GetUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(user)
 
 }
+
+func GetMessages(c *fiber.Ctx) error {
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	allMsg, msg := controllers.GetAllMessages()
+
+	if msg != "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": msg})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(allMsg)
+}
