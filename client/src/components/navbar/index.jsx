@@ -59,6 +59,9 @@ const Header = () => {
                                         <li className="nav-item">
                                             <Link className="nav-link active" to="/alllinks">All Links</Link>
                                         </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link active" to="/messages">All Messages</Link>
+                                        </li>
                                     </> : null}
 
                                 </>

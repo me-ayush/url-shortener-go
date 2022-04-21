@@ -19,6 +19,7 @@ import Alllinks from './components/admin/alllinks'
 
 import Login from './components/login/login'
 import Signup from './components/signup/signup'
+import { Message } from "./components/admin/messages";
 
 
 
@@ -42,6 +43,7 @@ function App() {
             <Route path=":user_id" element={<Allusers />} />
           </Route>
           <Route path="/alllinks" element={<Alllinks />} />
+          <Route path="/messages" element={<Message />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
