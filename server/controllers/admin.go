@@ -7,6 +7,7 @@ import (
 	"url-shortener/database"
 	"url-shortener/models"
 
+	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -107,4 +108,40 @@ func DelMessage(urlId string) (string, error) {
 	}
 
 	return "Message Successfully Deleted", nil
+}
+
+func DelLink(c *fiber.Ctx) error {
+
+	urlId := c.Params("url_id")
+	id, _ := primitive.ObjectIDFromHex(urlId)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	mdb := database.OpenCollection(database.Client, "message")
+
+	var userID models.Response
+
+	_ = mdb.FindOne(ctx, bson.M{"_id": id}).Decode(&userID)
+	defer cancel()
+
+	msg, resp, err := DelShorten(urlId)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
+	}
+	if resp <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Short Not Found"})
+	}
+
+	// fmt.Println(userID.Addedby)
+	msg, resp, err = DelFromUSer(urlId, userID.Addedby)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	if resp <= 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found in user"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(msg)
 }
