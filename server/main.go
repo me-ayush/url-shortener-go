@@ -26,6 +26,7 @@ func setupRoutes(app *fiber.App) {
 	admin := app.Group("/admin")
 	admin.Use(middleware.AuthAdmin)
 	admin.Get("/users", routes.AllUsers)
+	admin.Get("/users/:user_id", routes.AdminUserUpdate)
 	admin.Get("/links", routes.AllLinks)
 	admin.Post("/links/:url_id", routes.DeleleLink)
 	admin.Get("/message", routes.GetMessages)

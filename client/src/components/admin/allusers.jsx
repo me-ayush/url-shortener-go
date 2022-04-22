@@ -48,13 +48,17 @@ const Allusers = () => {
         getUsers()
         console.log(data)
     }, [])
+    
+    const handleView = (e) =>{
+      console.log(e.target.value)
+    }
 
     return (
         <>
             <Header />
             <div className="container mt-5">
       <h2 className='text-center'>User Data</h2>
-      <table className="table  table-striped table-hover">
+      <table className="table table-striped table-hover w-100 text-center">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -80,7 +84,10 @@ const Allusers = () => {
                       <td>Admin</td> :
                       <td>User</td>
                   }
-                  <td><Link className='nav-link' to={`/alluser/${d.user_id}`} target="_blank">View</Link></td>
+                  <td className='column-8'>
+                  <button className='btn btn-info  mx-1'  value={d._id} onClick={handleView}>View</button>
+                  <button className='btn btn-danger  mx-1'  value=''>Delete</button>
+                  </td>
                 </tr>
               )
             }

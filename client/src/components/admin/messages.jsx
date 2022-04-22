@@ -79,7 +79,7 @@ export const Message = () => {
       <Header />
       <div className="container mt-5">
         <h2 className='text-center'>All Messages</h2>
-        <table className="table  table-striped table-hover">
+        <table className="table  table-striped table-hover w-100 text-center">
           <thead>
             <tr>
               <th scope="col">#</th>

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"url-shortener/controllers"
 	"url-shortener/helpers"
+	"url-shortener/models"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -100,6 +101,28 @@ func DeleleLink(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(msg)
+}
+
+func AdminUserUpdate(c *fiber.Ctx) error {
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	userID := c.Params("user_id")
+	var user models.UpdateUser
+
+	if err := c.BodyParser(&user); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON in Admin Update User"})
+	}
+
+	msg, resp, err := controllers.AdminUpdateUser(userID, user)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	if resp <= 0 {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "User Not Updated"})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(msg)

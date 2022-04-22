@@ -111,8 +111,6 @@ func DelMessage(urlId string) (string, error) {
 }
 
 func DelLink(urlId string) (string, error) {
-
-	// urlId := c.Params("url_id")
 	id, _ := primitive.ObjectIDFromHex(urlId)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -123,30 +121,54 @@ func DelLink(urlId string) (string, error) {
 	_ = mdb.FindOne(ctx, bson.M{"_id": id}).Decode(&userID)
 	defer cancel()
 
-	// fmt.Println(userID)
-
-	// return "no", nil
-
 	msg, resp, err := DelShorten(urlId)
-
 	if err != nil {
-		// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
 		return "no", err
 	}
 	if resp <= 0 {
 		return "no", errors.New("Short Not Found")
 	}
 
-	// fmt.Println(userID.Addedby)
 	msg, resp, err = DelFromUSer(urlId, userID.Addedby)
-
 	if err != nil {
 		return "no", err
 	}
-
 	if resp <= 0 {
 		return "no", errors.New("Short Not Found In User")
 	}
-
 	return msg, nil
+}
+
+func AdminUpdateUser(userId string, user models.UpdateUser) (string, int16, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	mdb := database.OpenCollection(database.Client, "users")
+
+	id, _ := primitive.ObjectIDFromHex(userId)
+
+	updatedTime := time.Now()
+	user.Updated_at = updatedTime
+
+	type x struct {
+		Email   string `bson:"email"`
+		User_id string `bson:"user_id"`
+	}
+	var userFound x
+	_ = mdb.FindOne(ctx, bson.M{"email": user.Email}).Decode(&userFound)
+	defer cancel()
+
+	if userId != userFound.User_id && userFound.Email == *user.Email {
+		return "Email Already Exists", 0, errors.New("email already exists")
+	}
+
+	result, err := mdb.UpdateOne(ctx,
+		bson.M{"_id": id},
+		bson.M{"$set": user},
+	)
+	defer cancel()
+
+	if err != nil {
+		return "User Not Found", 0, err
+	}
+
+	return "User Updated Successfully", int16(result.ModifiedCount), nil
 }
