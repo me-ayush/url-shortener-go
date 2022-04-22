@@ -12,10 +12,11 @@ const Alllinks = () => {
     const [cookies, setCookies] = useCookies(['user']);
     const domain = "http://localhost:3000"
 
+    const token = JSON.parse(localStorage.getItem('token'))
+    const user_id = JSON.parse(localStorage.getItem("id"))
+    const user = JSON.parse(localStorage.getItem("user"))
+
     const getUsers = async () => {
-        const token = JSON.parse(localStorage.getItem('token'))
-        const user_id = JSON.parse(localStorage.getItem("id"))
-        const user = JSON.parse(localStorage.getItem("user"))
 
         if (!token || !user_id || !user && cookies._jwt != "") {
             window.alert('First Login...')
@@ -49,8 +50,25 @@ const Alllinks = () => {
     }, [])
 
 
-    const handleDelete = (e) =>{
-        console.log(e.target.value)
+    const handleDelete = async(e) =>{
+        // console.log(e.target.value)
+        const res = await fetch(`admin/links/${e.target.value}`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "token": token,
+                "id": user_id
+            }
+        })
+        const data = await res.json()
+        console.log(data)
+        if(res.status != 200 || !data){
+            swal(data.error, "", "error");
+        }else{
+            swal("Link Deleted", "", "success");
+            getUsers()
+        }
     }
 
     return (
