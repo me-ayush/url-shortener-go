@@ -48,6 +48,7 @@ type UpdateUser struct {
 	// Pass       string    `json:"pass"`
 	Email      *string   `json:"email"`
 	Updated_at time.Time `json:"updated_at"`
+	User_type  *string   `json:"user_type"`
 }
 
 type ViewUsers struct {

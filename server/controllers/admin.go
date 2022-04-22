@@ -153,8 +153,11 @@ func AdminUpdateUser(userId string, user models.UpdateUser) (string, int16, erro
 		User_id string `bson:"user_id"`
 	}
 	var userFound x
-	_ = mdb.FindOne(ctx, bson.M{"email": user.Email}).Decode(&userFound)
+	err := mdb.FindOne(ctx, bson.M{"email": user.Email}).Decode(&userFound)
 	defer cancel()
+	if err != nil {
+		return "Email Not Found", 0, errors.New("email not found")
+	}
 
 	if userId != userFound.User_id && userFound.Email == *user.Email {
 		return "Email Already Exists", 0, errors.New("email already exists")

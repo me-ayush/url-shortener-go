@@ -126,7 +126,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-
+	*user.User_type = "USER"
 	msg, resp, err := controllers.UpdateUser(userId, user)
 
 	if err != nil {
