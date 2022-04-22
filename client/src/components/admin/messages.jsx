@@ -33,12 +33,12 @@ export const Message = () => {
         const data = await res.json();
         if (res.status !== 200 || !data) {
           swal(data.error, "", "error");
-          navigate("/")
         } else {
           setdata(data)
         }
       } catch (err) {
-        alert(err);
+        // console.log(data)
+        // alert(err);
       }
     }
   }
@@ -91,6 +91,7 @@ export const Message = () => {
             </tr>
           </thead>
           <tbody>
+            {!data?<><tr><td colSpan="6" className='text-center fs-3'>No Messages Yet...</td></tr></>:null}
             {
               data && data.map((d, key) => {
                 return (

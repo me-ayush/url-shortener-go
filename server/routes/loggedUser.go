@@ -42,15 +42,26 @@ func AddURL(c *fiber.Ctx) error {
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON"})
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	mdb := database.OpenCollection(database.Client, "users")
+
+	var x models.User
+	if err := mdb.FindOne(ctx, bson.M{"user_id": userId}).Decode(&x); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	body.Addedby = userId
+	body.User = *x.First_name + " " + *x.Last_Name
+
 	msg, resp, err := controllers.ShortTheURL(*body)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": msg})
 	}
 
-	mdb := database.OpenCollection(database.Client, "users")
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-
+	// mdb := database.OpenCollection(database.Client, "users")
 	// userId := c.Locals("uid")
 
 	query := bson.M{"user_id": userId}

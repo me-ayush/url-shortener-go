@@ -80,7 +80,7 @@ const Allusers = () => {
                       <td>Admin</td> :
                       <td>User</td>
                   }
-                  <td><Link className='nav-link' to={`/user/${d.user_id}`} target="_blank">View</Link></td>
+                  <td><Link className='nav-link' to={`/alluser/${d.user_id}`} target="_blank">View</Link></td>
                 </tr>
               )
             }

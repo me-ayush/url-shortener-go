@@ -62,10 +62,11 @@ const Alllinks = () => {
 									<tr className="row100 head">
 										<th className="column100 column1" data-column="column1">#</th>
 										<th className="column100 column2" data-column="column2">Id</th>
+										<th className="column100 column5" data-column="column5">Added By</th>
 										<th className="column100 column3" data-column="column3">URL</th>
 										<th className="column100 column4" data-column="column4">Short</th>
 										<th className="column100 column5" data-column="column5">Expiry</th>
-										{/* <th className="column100 column7 ps-5" data-column="column7">Action</th> */}
+										<th className="column100 column7 ps-5" data-column="column7">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -73,10 +74,11 @@ const Alllinks = () => {
 										<tr className="row100" key={i}>
 											<td className="column100 column1" data-column="column1">{i + 1}</td>
 											<td className="column100 column2" data-column="column2">{item._id}</td>
+											<td className="column100 column1" data-column="column1">{item.user == "" || item.user == " " ? 'Unregistered':item.user}</td>
 											<td className="column100 column3" data-column="column3"><a href={item.url} target="_blank">{item.url}</a></td>
 											<td className="column100 column4" data-column="column4"><a href={domain + '/' + item.short} target="_blank">{item.short}</a></td>
 											<td className="column100 column5" data-column="column5">{(item.expiry)}</td>
-											{/* <td className='column100 column8 text-center p-0 m-0 btn-c'><button className='btn btn-danger' value={item.url_id} onClick={(e) => handleDelete(e)}>Delete</button> </td> */}
+											<td className='column100 column8 text-center p-0 m-0 btn-c'><button className='btn btn-danger' value={item.url_id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
 										</tr>
 									))}
 								</tbody>
