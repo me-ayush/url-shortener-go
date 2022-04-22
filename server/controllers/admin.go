@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 	"url-shortener/database"
 	"url-shortener/models"
 
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -110,38 +110,43 @@ func DelMessage(urlId string) (string, error) {
 	return "Message Successfully Deleted", nil
 }
 
-func DelLink(c *fiber.Ctx) error {
+func DelLink(urlId string) (string, error) {
 
-	urlId := c.Params("url_id")
+	// urlId := c.Params("url_id")
 	id, _ := primitive.ObjectIDFromHex(urlId)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-	mdb := database.OpenCollection(database.Client, "message")
+	mdb := database.OpenCollection(database.Client, "shorten-urls")
 
 	var userID models.Response
 
 	_ = mdb.FindOne(ctx, bson.M{"_id": id}).Decode(&userID)
 	defer cancel()
 
+	// fmt.Println(userID)
+
+	// return "no", nil
+
 	msg, resp, err := DelShorten(urlId)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
+		// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
+		return "no", err
 	}
 	if resp <= 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Short Not Found"})
+		return "no", errors.New("Short Not Found")
 	}
 
 	// fmt.Println(userID.Addedby)
 	msg, resp, err = DelFromUSer(urlId, userID.Addedby)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return "no", err
 	}
 
 	if resp <= 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found in user"})
+		return "no", errors.New("Short Not Found In User")
 	}
 
-	return c.Status(fiber.StatusOK).JSON(msg)
+	return msg, nil
 }

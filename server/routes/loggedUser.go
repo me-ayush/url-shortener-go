@@ -92,12 +92,12 @@ func DeleteURL(c *fiber.Ctx) error {
 	}
 	msg, resp, err := controllers.DelShorten(urlId)
 
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
-	}
-	if resp <= 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
-	}
+	// if err != nil {
+	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err, "msg": msg})
+	// }
+	// if resp <= 0 {
+	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
+	// }
 
 	msg, resp, err = controllers.DelFromUSer(urlId, userId)
 
