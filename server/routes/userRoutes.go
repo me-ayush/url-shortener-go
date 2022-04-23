@@ -26,14 +26,14 @@ func Login(c *fiber.Ctx) error {
 	err := mdb.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
 	defer cancel()
 	if foundUser.Email == nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user not found"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "user not found"})
 	}
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "email is inncorrect"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "email is inncorrect"})
 	}
 	passwordIsValid, msg := helpers.VerifyPassword(*user.Password, *foundUser.Password)
 	if !passwordIsValid {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": msg})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": msg})
 	}
 
 	token, refreshToken, _ := helpers.GenrateAllTokens(*foundUser.Email, *foundUser.First_name, *foundUser.Last_Name, *foundUser.User_type, *&foundUser.User_id)
@@ -98,7 +98,7 @@ func Contact(c *fiber.Ctx) error {
 	msg, err := controllers.StoreMessage(message)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": msg})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": msg})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(msg)

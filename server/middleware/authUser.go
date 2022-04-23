@@ -10,7 +10,7 @@ func AuthUser(c *fiber.Ctx) error {
 	// userId := c.Params("user_id")
 	clientToken := c.Get("token")
 	if clientToken == "" {
-		return c.Status(fiber.StatusNetworkAuthenticationRequired).JSON(fiber.Map{"error": "No Authotization header provided"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "No authorization header provided in user"})
 	}
 
 	claims, err := helpers.ValidateToken(clientToken)
@@ -18,7 +18,7 @@ func AuthUser(c *fiber.Ctx) error {
 	// fmt.Println(userId)
 
 	if err != "" {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err})
 	}
 
 	c.Locals("email", claims.Email)

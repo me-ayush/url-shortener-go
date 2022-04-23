@@ -9,7 +9,7 @@ import (
 func AuthAdmin(c *fiber.Ctx) error {
 	adminToken := c.Get("token")
 	if adminToken == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "No Authotization header provided"})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "No authorization header provided for admin"})
 	}
 	claims, err := helpers.ValidateToken(adminToken)
 	if err != "" {

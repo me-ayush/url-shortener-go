@@ -16,7 +16,7 @@ func UserDetails(c *fiber.Ctx) error {
 	userId := c.Params("user_id")
 
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -25,7 +25,7 @@ func UserDetails(c *fiber.Ctx) error {
 	err := mdb.FindOne(ctx, bson.M{"user_id": userId}).Decode(&user)
 	defer cancel()
 	if err != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.Status(fiber.StatusOK).JSON(user)
 }
@@ -36,7 +36,7 @@ func AddURL(c *fiber.Ctx) error {
 	userId := c.Params("user_id")
 
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	if err := c.BodyParser(&body); err != nil {
@@ -88,7 +88,7 @@ func DeleteURL(c *fiber.Ctx) error {
 	urlId := c.Params("url_id")
 	userId := c.Params("user_id")
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
 	msg, resp, err := controllers.DelShorten(urlId)
 
@@ -124,7 +124,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 	}
 
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
 	*user.User_type = "USER"
 	msg, resp, err := controllers.UpdateUser(userId, user)
