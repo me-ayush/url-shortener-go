@@ -50,6 +50,30 @@ const Allusers = () => {
     // console.log(data)
   }, [])
 
+  async function handleDelete(e) {
+    // console.log(e.target.value)
+    var id = e.target.value.slice(1, e.target.value.length)
+    // console.log(id)
+    const res = await fetch(`/admin/users/delete/${id}`,{
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+        "token": token,
+        "id": user_id
+      }
+    });
+
+    const data = await res.json()
+    if(res.status != 200 || !data){
+      swal(data.error, "", "error")
+    }else{
+      swal("User Deleted", "", "success")
+      getUsers()
+    }
+
+  }
+
 
   const handleView = (e) => {
     let id = e.target.value
@@ -143,7 +167,7 @@ const Allusers = () => {
                     }
                     <td className='column-8'>
                       <button className='btn btn-info  mx-1 my-1' value={[d._id + key]} defaultValue={d._id} data-bs-toggle="modal" data-bs-target={`#view${key + 1}`} onClick={handleView}>View</button>
-                      <button className='btn btn-danger  mx-1 my-1' value={d._id}>Delete</button>
+                      <button className='btn btn-danger  mx-1 my-1' value={key+d._id} onClick={handleDelete}>Delete</button>
 
 
                       <div className="modal fade" id={`view${key + 1}`} tabIndex="-1" aria-labelledby={`viewDetail${key + 1}`} aria-hidden="true">
