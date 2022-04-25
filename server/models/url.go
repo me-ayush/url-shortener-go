@@ -21,4 +21,6 @@ type Response struct {
 	User    string        `json:"User"`
 	Clicks  string        `json:"clicks"`
 	Expiry  time.Duration `json:"expiry"`
+	// XrateReaminimg  int           `json:"rate_limit"`
+	// XrateLimitReset time.Duration `json:"rate_limit_reset"`
 }

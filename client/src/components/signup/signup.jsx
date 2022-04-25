@@ -19,44 +19,44 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         let f = 0
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            document.getElementById('email').classList.remove('is-invalid')
-        } else {
-            document.getElementById('email').classList.add('is-invalid')
-            f = 1
-        }
+        // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        //     document.getElementById('email').classList.remove('is-invalid')
+        // } else {
+        //     document.getElementById('email').classList.add('is-invalid')
+        //     f = 1
+        // }
 
-        if (first == '') {
-            document.getElementById('firstname').classList.add('is-invalid')
-            f = 1
-        } else {
-            document.getElementById('firstname').classList.remove('is-invalid')
-        }
+        // if (first == '') {
+        //     document.getElementById('firstname').classList.add('is-invalid')
+        //     f = 1
+        // } else {
+        //     document.getElementById('firstname').classList.remove('is-invalid')
+        // }
 
-        if (second == '') {
-            document.getElementById('lastname').classList.add('is-invalid')
-            f = 1
-        } else {
-            document.getElementById('lastname').classList.remove('is-invalid')
-        }
+        // if (second == '') {
+        //     document.getElementById('lastname').classList.add('is-invalid')
+        //     f = 1
+        // } else {
+        //     document.getElementById('lastname').classList.remove('is-invalid')
+        // }
 
-        if (pass == '') {
-            document.getElementById('password').classList.add('is-invalid')
-            f = 1
-        } else {
-            document.getElementById('password').classList.remove('is-invalid')
-        }
+        // if (pass == '') {
+        //     document.getElementById('password').classList.add('is-invalid')
+        //     f = 1
+        // } else {
+        //     document.getElementById('password').classList.remove('is-invalid')
+        // }
 
-        if (cpass == '' || cpass != pass) {
-            document.getElementById('cpassword').classList.add('is-invalid')
-            f = 1
-        } else {
-            document.getElementById('cpassword').classList.remove('is-invalid')
-        }
+        // if (cpass == '' || cpass != pass) {
+        //     document.getElementById('cpassword').classList.add('is-invalid')
+        //     f = 1
+        // } else {
+        //     document.getElementById('cpassword').classList.remove('is-invalid')
+        // }
 
-        if (f == 1) {
-            return
-        }
+        // if (f == 1) {
+        //     return
+        // }
         // console.log(first, second, email, pass, cpass)
 
         const res = await fetch('/signup', {

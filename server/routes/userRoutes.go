@@ -75,7 +75,7 @@ func Signup(c *fiber.Ctx) error {
 	user.Token = &token
 	user.Refresh_token = &refreshToken
 	// var x models.Response
-	user.Links = []models.Response{}
+	// user.Links = []models.Response{}
 
 	result, err := mdb.InsertOne(ctx, user)
 	if err != nil {

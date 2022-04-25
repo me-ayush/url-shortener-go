@@ -66,21 +66,23 @@ func AddURL(c *fiber.Ctx) error {
 	// mdb := database.OpenCollection(database.Client, "users")
 	// userId := c.Locals("uid")
 
-	query := bson.M{"user_id": userId}
-	update := bson.M{"$push": bson.M{"links": bson.M{
-		"url_id": resp.URL_ID,
-		"url":    resp.URL,
-		"short":  resp.Short,
-		"expiry": resp.Expiry,
-	}}}
-	_, err = mdb.UpdateOne(ctx,
-		query,
-		update,
-	)
-	defer cancel()
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
+	// query := bson.M{"user_id": userId}
+	// update := bson.M{"$push": bson.M{"links": bson.M{
+	// 	"url_id": resp.URL_ID,
+	// 	"url":    resp.URL,
+	// 	"short":  resp.Short,
+	// 	"expiry": resp.Expiry,
+	// }}}
+	// _, err = mdb.UpdateOne(ctx,
+	// 	query,
+	// 	update,
+	// )
+
+	// defer cancel()
+	// if err != nil {
+	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	// }
+
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
@@ -99,7 +101,7 @@ func DeleteURL(c *fiber.Ctx) error {
 	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
 	// }
 
-	msg, resp, err = controllers.DelFromUSer(urlId, userId)
+	// msg, resp, err = controllers.DelFromUSer(urlId, userId)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})

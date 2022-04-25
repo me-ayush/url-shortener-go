@@ -129,10 +129,10 @@ func DelLink(urlId string) (string, error) {
 		return "no", errors.New("Short Not Found")
 	}
 
-	msg, resp, err = DelFromUSer(urlId, userID.Addedby)
-	if err != nil {
-		return "no", err
-	}
+	// msg, resp, err = DelFromUSer(urlId, userID.Addedby)
+	// if err != nil {
+	// 	return "no", err
+	// }
 	// if resp <= 0 {
 	// 	return "no", errors.New("Short Not Found In User")
 	// }
