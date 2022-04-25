@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+	"strconv"
 	"time"
 	"url-shortener/database"
 	"url-shortener/models"
@@ -27,6 +28,15 @@ func ResolveURL(c *fiber.Ctx) error {
 			"Msg": "404 Not Found",
 		})
 	}
+
+	x, _ := strconv.Atoi(urlDetail.Clicks)
+	// fmt.Println(x)
+	urlDetail.Clicks = strconv.Itoa(x + 1)
+
+	_, _ = mdb.UpdateOne(ctx,
+		bson.M{"short": urlDetail.Short},
+		bson.M{"$set": urlDetail},
+	)
 
 	return c.Redirect(urlDetail.URL, 301)
 }

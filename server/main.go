@@ -19,6 +19,7 @@ func setupRoutes(app *fiber.App) {
 	private := app.Group("/user")
 	private.Use(middleware.AuthUser)
 	private.Get("/:user_id", routes.UserDetails)
+	private.Get("/mylinks/:user_id", routes.UserLinks)
 	private.Post("/:user_id/updateprofile", routes.UpdateProfile)
 	private.Post("/:user_id/add", routes.AddURL)
 	private.Post("/:user_id/delete/:url_id", routes.DeleteURL)

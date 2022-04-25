@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 	"url-shortener/database"
 	"url-shortener/helpers"
@@ -19,11 +20,9 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 
 	// check if the input is an actual URL
 	resp := models.Response{
-		URL:             "",
-		Short:           "",
-		Expiry:          0,
-		XrateReaminimg:  0,
-		XrateLimitReset: 0,
+		URL:    "",
+		Short:  "",
+		Expiry: 0,
 	}
 	err := *new(error)
 	if !govalidator.IsURL(body.URL) {
@@ -72,6 +71,7 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 	}
 
 	body.Expiry = body.Expiry * 3600 * time.Second
+	body.Clicks = strconv.Itoa(0)
 
 	res, err := mdb.InsertOne(ctx, body)
 	defer cancel()
@@ -81,11 +81,9 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 	}
 
 	resp = models.Response{
-		URL:             body.URL,
-		Short:           body.Short,
-		Expiry:          body.Expiry,
-		XrateReaminimg:  10,
-		XrateLimitReset: 30,
+		URL:    body.URL,
+		Short:  body.Short,
+		Expiry: body.Expiry,
 	}
 	// resp.URL_ID = primitive.NewObjectID().Hex()
 	// x := fmt.Sprint(res.InsertedID)
