@@ -33,6 +33,7 @@ const Alllinks = () => {
                     }
                 });
                 const data = await res.json();
+                console.log(data)
                 if (res.status !== 200 || !data) {
                     swal(data.error, "", "error");
                     navigate("/")
@@ -40,7 +41,7 @@ const Alllinks = () => {
                     setLinks(data)
                 }
             } catch (err) {
-                alert(err);
+                // alert(err);
             }
         }
     }

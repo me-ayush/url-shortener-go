@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 	"url-shortener/controllers"
@@ -128,7 +129,8 @@ func UpdateProfile(c *fiber.Ctx) error {
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
-	*user.User_type = "USER"
+	x := "USER"
+	user.User_type = &x
 	msg, resp, err := controllers.UpdateUser(userId, user)
 
 	if err != nil {
@@ -138,8 +140,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
 	}
 
-	// fmt.Println(msg, resp, err)
-
+	fmt.Println(msg, resp, err)
 	return c.Status(fiber.StatusOK).JSON(msg)
 }
 
