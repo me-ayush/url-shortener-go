@@ -127,3 +127,19 @@ func AdminUserUpdate(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(msg)
 }
+
+func DelUserAdmin(c *fiber.Ctx) error {
+	if err := validateAdmin(c); err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
+	}
+	userID := c.Params("user_id")
+
+	msg, err := controllers.AdminDelUser(userID)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(msg)
+
+}

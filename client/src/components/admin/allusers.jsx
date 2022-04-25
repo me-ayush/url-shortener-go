@@ -112,7 +112,7 @@ const Allusers = () => {
   return (
     <>
       <Header />
-      <div className="container mt-5">
+      <div className="container mt-5"  style={{"overflow":"auto"}}>
         <h2 className='text-center'>User Data</h2>
         <table className="table table-striped table-hover w-100 text-center">
           <thead>
@@ -142,8 +142,8 @@ const Allusers = () => {
                         <td>User</td>
                     }
                     <td className='column-8'>
-                      <button className='btn btn-info  mx-1' value={[d._id + key]} defaultValue={d._id} data-bs-toggle="modal" data-bs-target={`#view${key + 1}`} onClick={handleView}>View</button>
-                      <button className='btn btn-danger  mx-1' value={d._id}>Delete</button>
+                      <button className='btn btn-info  mx-1 my-1' value={[d._id + key]} defaultValue={d._id} data-bs-toggle="modal" data-bs-target={`#view${key + 1}`} onClick={handleView}>View</button>
+                      <button className='btn btn-danger  mx-1 my-1' value={d._id}>Delete</button>
 
 
                       <div className="modal fade" id={`view${key + 1}`} tabIndex="-1" aria-labelledby={`viewDetail${key + 1}`} aria-hidden="true">

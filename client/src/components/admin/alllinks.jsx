@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import Header from '../navbar'
 import { useCookies } from 'react-cookie';
 import swal from 'sweetalert';
-
+// import '../user/table.scss'
 
 
 const Alllinks = () => {
@@ -79,7 +79,7 @@ const Alllinks = () => {
                     <div className="wrap-table100">
 
                         <div className="table100 ver1 m-b-110">
-                            <table data-vertable="ver1">
+                            <table data-vertable="ver1" className='text-center'>
                                 <thead>
                                     <tr className="row100 head">
                                         <th className="column100 column1" data-column="column1">#</th>

@@ -133,9 +133,9 @@ func DelLink(urlId string) (string, error) {
 	if err != nil {
 		return "no", err
 	}
-	if resp <= 0 {
-		return "no", errors.New("Short Not Found In User")
-	}
+	// if resp <= 0 {
+	// 	return "no", errors.New("Short Not Found In User")
+	// }
 	return msg, nil
 }
 
@@ -171,4 +171,24 @@ func AdminUpdateUser(userId string, user models.UpdateUser) (string, int16, erro
 	}
 
 	return "User Updated Successfully", int16(result.ModifiedCount), nil
+}
+
+func AdminDelUser(userID string) (string, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	mdb := database.OpenCollection(database.Client, "users")
+
+	id, _ := primitive.ObjectIDFromHex(userID)
+
+	res, err := mdb.DeleteOne(ctx, bson.M{"_id": id})
+	defer cancel()
+	if err != nil {
+		return "Not able to delete the User", err
+	}
+
+	if res.DeletedCount <= 0 {
+		return "Not able to delete the User", nil
+	}
+
+	return "User Deleted", nil
 }
