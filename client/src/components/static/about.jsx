@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../navbar'
-import './about.scss'
+import './css/about.scss'
 
 
 const About = () => {

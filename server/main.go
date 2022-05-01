@@ -35,7 +35,7 @@ func setupRoutes(app *fiber.App) {
 	admin.Get("/message", routes.GetMessages)
 	admin.Post("/message/:url_id", routes.DeleteMessage)
 
-	app.Get("/:url", routes.ResolveURL)
+	app.Get("/geturl/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
 	app.Post("/login", routes.Login)
 	app.Post("/signup", routes.Signup)

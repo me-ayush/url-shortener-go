@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Header from '../navbar'
-import './home.scss'
+import './css/home.scss'
 
 import ReactDOM from 'react-dom';
 import swal from 'sweetalert';

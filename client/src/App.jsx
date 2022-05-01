@@ -6,6 +6,7 @@ import {
 import './static/css/bootstrap.min.css'
 import './static/js/bootstrap.min.js'
 
+import Geturl from "./components//static/Geturl";
 import Home from './components/static/home'
 import Contact from './components/static/contact'
 import About from './components/static/about'
@@ -32,7 +33,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/connect" element={<Contact />} />
 
           <Route path="/addurl" element={<Addurl />} />
           <Route path="/myurl" element={<Myurl />} />
@@ -45,9 +46,12 @@ function App() {
           <Route path="/alllinks" element={<Alllinks />} />
           <Route path="/messages" element={<Message />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/sigin" element={<Login />} />
+          <Route path="/register" element={<Signup />} />
 
+          <Route exact path="*" >
+            <Route path=":short" element={<Geturl />} />
+          </Route>
 
         </Routes>
       </BrowserRouter>

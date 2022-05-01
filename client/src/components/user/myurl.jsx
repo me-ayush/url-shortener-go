@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Header from '../navbar'
 import './table.scss'
 import swal from 'sweetalert';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 const Myurl = () => {
@@ -120,7 +120,7 @@ const Myurl = () => {
 											<td className="column100 column1" data-column="column1">{i + 1}</td>
 											<td className="column100 column2" data-column="column2">{item._id}</td>
 											<td className="column100 column3" data-column="column3"><a href={item.url} target="_blank">{item.url}</a></td>
-											<td className="column100 column4" data-column="column4"><a href={domain + '/' + item.short} target="_blank">{item.short}</a></td>
+											<td className="column100 column4" data-column="column4"><Link to={'/'+item.short} target="_blank">{item.short}</Link></td>
 											<td className="column100 column5" data-column="column5">{getMinute(item.clicks)}</td>
 											<td className="column100 column5" data-column="column5">{getMinute(item.expiry)}</td>
 											{/* <td className="column100 column6" data-column="column6">{item.rate_limit == 0 ? <>--</> : item.rate_limit}</td> */}

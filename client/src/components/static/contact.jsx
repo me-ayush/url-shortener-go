@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import Header from '../navbar'
-import './contact.scss'
+import './css/contact.scss'
 import swal from 'sweetalert';
 
 

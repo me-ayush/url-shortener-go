@@ -38,6 +38,11 @@ export default defineConfig({
         secure: false,
         ws: true,
       },
+      '/geturl':{
+        target: 'http://localhost:3000',
+        secure: false,
+        ws: true,
+      },
     }
   }
 })

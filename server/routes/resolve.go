@@ -24,9 +24,10 @@ func ResolveURL(c *fiber.Ctx) error {
 	err := mdb.FindOne(ctx, bson.M{"short": url}).Decode(&urlDetail)
 	defer cancel()
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).Render("404", fiber.Map{
-			"Msg": "404 Not Found",
-		})
+		// return c.Status(fiber.StatusNotFound).Render("404", fiber.Map{
+		// 	"Msg": "404 Not Found",
+		// })
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "404 Not Found"})
 	}
 
 	x, _ := strconv.Atoi(urlDetail.Clicks)
@@ -38,5 +39,6 @@ func ResolveURL(c *fiber.Ctx) error {
 		bson.M{"$set": urlDetail},
 	)
 
-	return c.Redirect(urlDetail.URL, 301)
+	// return c.Redirect(urlDetail.URL, 301)
+	return c.Status(fiber.StatusOK).JSON(urlDetail.URL)
 }

@@ -40,7 +40,7 @@ const Header = () => {
                                 <Link className="nav-link active" aria-current="page" to="/about">About</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/contact">Contact Me</Link>
+                                <Link className="nav-link active" aria-current="page" to="/connect">Contact Me</Link>
                             </li>
                             {localStorage.getItem("token") ?
                                 <>
@@ -88,10 +88,10 @@ const Header = () => {
                             <>
                                 <ul className="navbar-nav">
                                     <li className="nav-item">
-                                        <Link className="nav-link active" to="/login">Login</Link>
+                                        <Link className="nav-link active" to="/sigin">Login</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link active" to="/signup">Signup</Link>
+                                        <Link className="nav-link active" to="/register">Signup</Link>
                                     </li>
                                 </ul>
                             </>
