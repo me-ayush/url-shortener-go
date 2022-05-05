@@ -17,12 +17,12 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         let f = 0
-        // if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-        //     document.getElementById('floatingInput').classList.remove('is-invalid')
-        // }else{
-        //     document.getElementById('floatingInput').classList.add('is-invalid')
-        //     f = 1
-        // }
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+            document.getElementById('floatingInput').classList.remove('is-invalid')
+        }else{
+            document.getElementById('floatingInput').classList.add('is-invalid')
+            f = 1
+        }
 
         if (password == '') {
             document.getElementById('floatingPassword').classList.add('is-invalid')
@@ -33,7 +33,6 @@ const Login = () => {
         if (f == 1) {
             return
         }
-
 
         const res = await fetch('/login', {
             method: "POST",
@@ -46,10 +45,8 @@ const Login = () => {
         })
 
         const data = await res.json();
-        // console.log(data)
 
         if (res.status != 200 || !data) {
-            // window.alert(data.error);
             swal("Login Error", data.error, "error");
         } else {
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
@@ -65,7 +62,6 @@ const Login = () => {
             swal("Login Successfull", '', "success").then((e)=>{
                 nav('/')
               });
-            // nav('/')
         }
     }
 

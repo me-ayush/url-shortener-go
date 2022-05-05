@@ -37,19 +37,15 @@ export const Message = () => {
           setdata(data)
         }
       } catch (err) {
-        // console.log(data)
-        // alert(err);
       }
     }
   }
 
   useEffect(() => {
     getMessages()
-    // console.log(data)
   }, [])
 
   const handleDelete = async(e) =>{
-    // console.log(e.target.value)
     try{
     const res = await fetch(`/admin/message/${e.target.value}`,{
       method:"POST",
@@ -70,7 +66,6 @@ export const Message = () => {
         }
       }catch(e){
         swal("Something Went Wrong", "", "error");
-        // setdata(data)
       }
   }
 

@@ -17,9 +17,8 @@ const Alllinks = () => {
     const user = JSON.parse(localStorage.getItem("user"))
 
     const getUsers = async () => {
-
         if (!token || !user_id || !user && cookies._jwt != "") {
-            window.alert('First Login...')
+            swal("Please Login", "", "error");
             navigate("/login")
         } else {
             try {
@@ -33,9 +32,9 @@ const Alllinks = () => {
                     }
                 });
                 const data = await res.json();
-                console.log(data)
                 if (res.status !== 200 || !data) {
                     swal(data.error, "", "error");
+                    localStorage.clear()
                     navigate("/")
                 } else {
                     setLinks(data)
@@ -48,12 +47,10 @@ const Alllinks = () => {
 
     useEffect(() => {
         getUsers()
-        // console.log(links)
     }, [])
 
 
     const handleDelete = async(e) =>{
-        // console.log(e.target.value)
         const res = await fetch(`admin/links/${e.target.value}`,{
             method: "POST",
             headers: {

@@ -31,6 +31,7 @@ const Addurl = () => {
 				const data = await res.json();
 				if (res.status != 200 || !data) {
                     swal(data.error, "", "error");
+                    localStorage.clear();
 				} else {
                     swal("Short Added", "", "success");
 				}

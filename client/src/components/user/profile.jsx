@@ -34,7 +34,6 @@ const Profile = () => {
 
   const updateProfile = async(e) =>{
     e.preventDefault();
-    // console.log('opk')
     const res = await fetch(`/user/${user_id}/updateprofile`,{
       method: "POST",
       headers:{
@@ -82,14 +81,13 @@ const Profile = () => {
         })
       }
     } catch (err) {
-      console.warn(err);
+      // console.warn(err);
     }
 
 
   }
 
   useEffect(() => {
-    // console.log(token, user_id, user)
     if (!token || !user_id || !user || token == '' || user_id == '' || user == '') {
       localStorage.clear()
       swal("Wrong Credentials", "", "error");
@@ -97,7 +95,6 @@ const Profile = () => {
     } else {
       check_auth()
     }
-    // console.log(detail)
   }, [])
 
 

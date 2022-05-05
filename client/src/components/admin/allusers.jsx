@@ -35,6 +35,7 @@ const Allusers = () => {
         const data = await res.json();
         if (res.status !== 200 || !data) {
           swal(data.error, "", "error");
+          localStorage.clear()
           navigate("/")
         } else {
           setdata(data)
@@ -47,13 +48,10 @@ const Allusers = () => {
 
   useEffect(() => {
     getUsers()
-    // console.log(data)
   }, [])
 
   async function handleDelete(e) {
-    // console.log(e.target.value)
     var id = e.target.value.slice(1, e.target.value.length)
-    // console.log(id)
     const res = await fetch(`/admin/users/delete/${id}`,{
       method:"POST",
       headers: {
@@ -77,14 +75,10 @@ const Allusers = () => {
 
   const handleView = (e) => {
     let id = e.target.value
-    // console.log(id.slice(24, id.length))
     setUpdateuser(data[id.slice(24, id.length)])
-    // console.log(updateuser)
   }
 
   const handleSave = async (e) => {
-    // console.log(e.target.value)
-    // console.log(updateuser)
     const res = await fetch(`admin/users/${e.target.value}`, {
       method: "POST",
       headers: {

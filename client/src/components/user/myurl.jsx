@@ -38,8 +38,8 @@ const Myurl = () => {
 				const data = await res.json();
 				if (res.status !== 200 || !data) {
 					swal(data.error, "", "error");
+                    localStorage.clear();
 				} else {
-					// console.log(data)
 					setLinks(data)
 				}
 			} catch (err) {
@@ -50,28 +50,13 @@ const Myurl = () => {
 
 	}
 
-	// const setIP = async() =>{
-	// 	await fetch("https://api.ipdata.co")
-	// 		.then(response => {
-	// 			return response.json();
-	// 		}, "jsonp")
-	// 		.then(res => {
-	// 			console.log(res.ip)
-	// 		})
-	// 		.catch(err => console.log(err))
-	// }
-
 	useEffect(() => {
 		set_links()
-		// console.log(links)
-		// const request_ip = req.ip
-		// setIP()
 	}, [])
 
 	const handleDelete = async (e) => {
 		e.preventDefault()
 		const url_id = e.target.value
-		// console.log(e.target.value)
 		const res = await fetch(`/user/${user_id}/delete/${url_id}`, {
 			method: "POST",
 			headers: {
