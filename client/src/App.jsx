@@ -46,7 +46,7 @@ function App() {
           <Route path="/alllinks" element={<Alllinks />} />
           <Route path="/messages" element={<Message />} />
 
-          <Route path="/sigin" element={<Login />} />
+          <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Signup />} />
 
           <Route exact path="*" >

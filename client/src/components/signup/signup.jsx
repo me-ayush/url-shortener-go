@@ -140,7 +140,7 @@ const Signup = () => {
                                         <div className="col-12 form-floating px-1">
                                             <button type="submit" className="btn py-3 btn-primary btn-block w-100">Create My Account</button>
                                         </div>
-                                        <span className="d-block text-left my-4 text-muted">&mdash; Already have an account? &mdash; <Link className='text-decoration-none' to="/login">Login Now</Link> </span>
+                                        <span className="d-block text-left my-4 text-muted">&mdash; Already have an account? &mdash; <Link className='text-decoration-none' to="/signin">Login Now</Link> </span>
 
                                     </form>
                                 </div>

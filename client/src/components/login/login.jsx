@@ -97,7 +97,7 @@ const Login = () => {
                                         </div>
                                         
                                         <button type="submit" value="Log In" className="btn btn-block btn-primary" > Log In</button>
-                                        <span className="d-block text-left my-4 text-muted">&mdash; Don't have an account? &mdash; <Link className='text-decoration-none' to="/signup">Create a Account</Link> </span>
+                                        <span className="d-block text-left my-4 text-muted">&mdash; Don't have an account? &mdash; <Link className='text-decoration-none' to="/register">Create a Account</Link> </span>
                                     </form>
                                 </div>
                             </div>
