@@ -10,7 +10,9 @@ const Home = () => {
 
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
-  const domain = "http://localhost:3001/"
+  const domain = import.meta.env.VITE_DOMAIN
+
+  // console.log(import.meta.env.VITE_DOMAIN)
 
   
 	var token = ''

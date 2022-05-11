@@ -10,7 +10,6 @@ const Alllinks = () => {
     let navigate = useNavigate()
     const [links, setLinks] = useState(false)
     const [cookies, setCookies] = useCookies(['user']);
-    const domain = "http://localhost:3000"
 
     const token = JSON.parse(localStorage.getItem('token'))
     const user_id = JSON.parse(localStorage.getItem("id"))

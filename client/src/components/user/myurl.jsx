@@ -8,7 +8,6 @@ import { useNavigate, Link } from 'react-router-dom';
 const Myurl = () => {
 	const nav = useNavigate()
 	const [links, setLinks] = useState([])
-	const domain = "http://localhost:3000"
 
 	const token = JSON.parse(localStorage.getItem('token'))
 	const user_id = JSON.parse(localStorage.getItem("id"))

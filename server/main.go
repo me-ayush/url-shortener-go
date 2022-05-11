@@ -9,7 +9,6 @@ import (
 	"url-shortener/routes"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
 )
@@ -61,7 +60,7 @@ func main() {
 		Views: engine,
 	})
 
-	app.Use(logger.New())
+	// app.Use(logger.New())
 
 	setupRoutes(app)
 
