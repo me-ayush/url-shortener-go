@@ -6,7 +6,9 @@ import {
 import './static/css/bootstrap.min.css'
 import './static/js/bootstrap.min.js'
 
-import Geturl from "./components//static/Geturl";
+import Accountactivation from "./components/auth/accountvalidation";
+
+import Geturl from "./components/static/Geturl";
 import Home from './components/static/home'
 import Contact from './components/static/contact'
 import About from './components/static/about'
@@ -48,6 +50,10 @@ function App() {
 
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Signup />} />
+
+          <Route path="/auth" >
+            <Route path=":token" element={<Accountactivation />} />
+          </Route>
 
           <Route exact path="*" >
             <Route path=":short" element={<Geturl />} />

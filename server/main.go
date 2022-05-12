@@ -9,6 +9,7 @@ import (
 	"url-shortener/routes"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
 )
@@ -34,6 +35,7 @@ func setupRoutes(app *fiber.App) {
 	admin.Get("/message", routes.GetMessages)
 	admin.Post("/message/:url_id", routes.DeleteMessage)
 
+	app.Get("/validation/:token", routes.ActivateAccountRoute)
 	app.Get("/geturl/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)
 	app.Post("/login", routes.Login)
@@ -60,7 +62,7 @@ func main() {
 		Views: engine,
 	})
 
-	// app.Use(logger.New())
+	app.Use(logger.New())
 
 	setupRoutes(app)
 

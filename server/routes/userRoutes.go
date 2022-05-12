@@ -3,6 +3,7 @@ package routes
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 	"url-shortener/controllers"
 	"url-shortener/database"
@@ -31,6 +32,11 @@ func Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "email is inncorrect"})
 	}
+
+	if foundUser.Is_activated == 0 {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Account Is Not Activated"})
+	}
+
 	passwordIsValid, msg := helpers.VerifyPassword(*user.Password, *foundUser.Password)
 	if !passwordIsValid {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": msg})
@@ -51,6 +57,7 @@ func Signup(c *fiber.Ctx) error {
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot parse JSON in login"})
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	mdb := database.OpenCollection(database.Client, "users")
 
@@ -63,6 +70,14 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "email already exists"})
 	}
 
+	otp := helpers.GetAuthString(200, fmt.Sprintf(*user.Email))
+	finalSendMsg := fmt.Sprintf("OTP For Verification Is: <a href=%s>%s</a>", os.Getenv("DOMAIN")+"auth/"+otp, otp)
+	err = helpers.SendMail(*user.Email, "OTP Verification For New Account", finalSendMsg)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	hashPass := helpers.HashPassword(*user.Password)
 	user.Pass = *user.Password
 	user.Password = &hashPass
@@ -71,6 +86,8 @@ func Signup(c *fiber.Ctx) error {
 	user.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 	user.ID = primitive.NewObjectID()
 	user.User_id = user.ID.Hex()
+	user.Activation_token = otp
+	user.Is_activated = 0
 	token, refreshToken, _ := helpers.GenrateAllTokens(*user.Email, *user.First_name, *user.Last_Name, *user.User_type, *&user.User_id)
 	user.Token = &token
 	user.Refresh_token = &refreshToken
@@ -102,4 +119,16 @@ func Contact(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(msg)
+}
+
+func ActivateAccountRoute(c *fiber.Ctx) error {
+	queryValue := c.Params("token")
+
+	err := controllers.ActivateAccount(queryValue)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(queryValue)
 }

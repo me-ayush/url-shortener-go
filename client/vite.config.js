@@ -43,6 +43,11 @@ export default defineConfig({
         secure: false,
         ws: true,
       },
+      '/validation':{
+        target: 'http://localhost:3000',
+        secure: false,
+        ws: true,
+      },
     }
   }
 })
