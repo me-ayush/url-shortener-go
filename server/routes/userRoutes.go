@@ -71,7 +71,7 @@ func Signup(c *fiber.Ctx) error {
 	}
 
 	otp := helpers.GetAuthString(200, fmt.Sprintf(*user.Email))
-	finalSendMsg := fmt.Sprintf("OTP For Verification Is: <a href=%s>%s</a>", os.Getenv("DOMAIN")+"auth/"+otp, otp)
+	finalSendMsg := fmt.Sprintf("OTP For Verification Is: <a href=%s>%s</a>", os.Getenv("HOST")+"auth/"+otp, otp)
 	err = helpers.SendMail(*user.Email, "OTP Verification For New Account", finalSendMsg)
 
 	if err != nil {
