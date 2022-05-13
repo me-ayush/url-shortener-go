@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import Loader from '../loader/loader';
 import Header from '../navbar'
 import { useCookies } from 'react-cookie';
 import swal from 'sweetalert';
@@ -9,6 +10,7 @@ import swal from 'sweetalert';
 const Alllinks = () => {
     let navigate = useNavigate()
     const [links, setLinks] = useState(false)
+    const [isloading, setLoading] = useState(false)
     const [cookies, setCookies] = useCookies(['user']);
 
     const token = JSON.parse(localStorage.getItem('token'))
@@ -21,6 +23,7 @@ const Alllinks = () => {
             navigate("/login")
         } else {
             try {
+                setLoading(true)
                 const res = await fetch('/admin/links', {
                     method: "GET",
                     headers: {
@@ -30,6 +33,7 @@ const Alllinks = () => {
                         "id": user_id
                     }
                 });
+                setLoading(false)
                 const data = await res.json();
                 if (res.status !== 200 || !data) {
                     swal(data.error, "", "error");
@@ -40,6 +44,7 @@ const Alllinks = () => {
                 }
             } catch (err) {
                 // alert(err);
+                setLoading(false)
             }
         }
     }
@@ -49,8 +54,9 @@ const Alllinks = () => {
     }, [])
 
 
-    const handleDelete = async(e) =>{
-        const res = await fetch(`admin/links/${e.target.value}`,{
+    const handleDelete = async (e) => {
+        setLoading(true)
+        const res = await fetch(`admin/links/${e.target.value}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -59,11 +65,12 @@ const Alllinks = () => {
                 "id": user_id
             }
         })
+        setLoading(false)
         const data = await res.json()
         console.log(data)
-        if(res.status != 200 || !data){
+        if (res.status != 200 || !data) {
             swal(data.error, "", "error");
-        }else{
+        } else {
             swal("Link Deleted", "", "success");
             getUsers()
         }
@@ -72,6 +79,7 @@ const Alllinks = () => {
     return (
         <>
             <Header />
+            {isloading && <Loader />}
             <div className="limiter">
                 <div className="container-table100">
                     <div className="wrap-table100">

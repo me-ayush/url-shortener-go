@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
+import Loader from '../loader/loader';
 import Header from '../navbar'
 import './css/contact.scss'
 import swal from 'sweetalert';
 
 
 const Contact = () => {
-
+  const [isloading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
@@ -14,7 +15,7 @@ const Contact = () => {
 
   const handleContact = async(e) => {
     e.preventDefault()
-
+    setLoading(true)
     const res = await fetch('/contact',{
       method:"POST",
       headers:{
@@ -27,23 +28,20 @@ const Contact = () => {
         "message":message
       })
     })
-
     const data = await res.json()
-
+    setLoading(false)
     if(res.status != 200 || !data){
       swal(data.error, "", "error");
     }else{
       swal("Message Recieved", "", "success")
     }
-    
   }
 
   return (
     <>
       <Header />
-
+    {isloading && <Loader />}
 <div className='contact-con'>
-
       <section className="ftco-section">
         <div className="container">
           <div className="row justify-content-center">

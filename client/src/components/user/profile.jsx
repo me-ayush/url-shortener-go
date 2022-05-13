@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Loader from '../loader/loader';
 import Header from '../navbar'
 import { useNavigate, Link } from 'react-router-dom'
 import swal from 'sweetalert';
@@ -6,6 +7,7 @@ import swal from 'sweetalert';
 
 const Profile = () => {
   const nav = useNavigate()
+  const [isloading, setLoading] = useState(false)
   const [detail, setDetail] = useState({
     first: "",
     email: "",
@@ -34,6 +36,7 @@ const Profile = () => {
 
   const updateProfile = async(e) =>{
     e.preventDefault();
+    setLoading(true)
     const res = await fetch(`/user/${user_id}/updateprofile`,{
       method: "POST",
       headers:{
@@ -46,7 +49,7 @@ const Profile = () => {
         "last_name":detail.last,
       })
     })
-
+    setLoading(false)
     const data = await res.json()
     if (res.status != 200 || !data){
       swal(data.msg, "", "error");
@@ -58,6 +61,7 @@ const Profile = () => {
 
   const check_auth = async () => {
     try {
+      setLoading(true)
       const res = await fetch(`/user/${user_id}`, {
         method: "GET",
         headers: {
@@ -83,7 +87,8 @@ const Profile = () => {
     } catch (err) {
       // console.warn(err);
     }
-
+    
+    setLoading(false)
 
   }
 
@@ -101,6 +106,7 @@ const Profile = () => {
   return (
     <>
       <Header />
+    {isloading && <Loader />}
       <form method="POST">
         <div className="container rounded bg-white mt-5 mb-5">
           <div className="row">

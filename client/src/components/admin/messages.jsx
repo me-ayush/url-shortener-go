@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import Loader from '../loader/loader';
 import Header from '../navbar'
 import { useCookies } from 'react-cookie';
 import swal from 'sweetalert';
@@ -7,6 +8,7 @@ import swal from 'sweetalert';
 export const Message = () => {
 
   let navigate = useNavigate()
+  const [isloading, setLoading] = useState(false)
   const [data, setdata] = useState(false)
   const [cookies, setCookies] = useCookies(['user']);
 
@@ -17,10 +19,11 @@ export const Message = () => {
   const getMessages = async () => {
 
     if (!token || !user_id || !user && cookies._jwt) {
-      window.alert('First Login...')
+      swal("Please Login", "", "error");
       navigate("/login")
     } else {
       try {
+        setLoading(true)
         const res = await fetch('/admin/message', {
           method: "GET",
           headers: {
@@ -31,12 +34,14 @@ export const Message = () => {
           }
         });
         const data = await res.json();
+        setLoading(false)
         if (res.status !== 200 || !data) {
           swal(data.error, "", "error");
         } else {
           setdata(data)
         }
       } catch (err) {
+        setLoading(false)
       }
     }
   }
@@ -45,33 +50,37 @@ export const Message = () => {
     getMessages()
   }, [])
 
-  const handleDelete = async(e) =>{
-    try{
-    const res = await fetch(`/admin/message/${e.target.value}`,{
-      method:"POST",
-      headers:{
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        "token": token,
-        "id": user_id
-      }
-    })
-    
-    const data = await res.json();
-        if (res.status !== 200 || !data) {
-          swal(data.error, "", "error");
-        } else {
-          swal("Message Deleted", "", "success");
-          getMessages()
+  const handleDelete = async (e) => {
+    try {
+      setLoading(true)
+      const res = await fetch(`/admin/message/${e.target.value}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "token": token,
+          "id": user_id
         }
-      }catch(e){
-        swal("Something Went Wrong", "", "error");
+      })
+
+      const data = await res.json();
+      setLoading(false)
+      if (res.status !== 200 || !data) {
+        swal(data.error, "", "error");
+      } else {
+        swal("Message Deleted", "", "success");
+        getMessages()
       }
+    } catch (e) {
+      swal("Something Went Wrong", "", "error");
+      setLoading(false)
+    }
   }
 
   return (
     <>
       <Header />
+      {isloading && <Loader />}
       <div className="container mt-5">
         <h2 className='text-center'>All Messages</h2>
         <table className="table  table-striped table-hover w-100 text-center">
@@ -86,7 +95,7 @@ export const Message = () => {
             </tr>
           </thead>
           <tbody>
-            {!data?<><tr><td colSpan="6" className='text-center fs-3'>No Messages Yet...</td></tr></>:null}
+            {!data ? <><tr><td colSpan="6" className='text-center fs-3'>No Messages Yet...</td></tr></> : null}
             {
               data && data.map((d, key) => {
                 return (
@@ -127,7 +136,7 @@ export const Message = () => {
                                   <span className="input-group-text" id="inputGroup-sizing-default">Message</span>
                                   <input type="text" className="form-control" disabled value={d.message} />
                                 </div>
-                                
+
                               </div>
                               <div className="modal-footer">
                                 <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Close</button>

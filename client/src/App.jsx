@@ -26,6 +26,7 @@ import { Message } from "./components/admin/messages";
 import NewActivationCode from "./components/auth/new_activation_code";
 import ResetPassword from "./components/auth/reset_pass";
 import AuthIndex from "./components/auth/auth";
+import Loader from "./components/loader/loader";
 
 
 
@@ -36,6 +37,9 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+
+        <Route path="/loader"  element={<Loader />} />
+
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/connect" element={<Contact />} />

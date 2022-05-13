@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Header from '../navbar/index'
+import Loader from '../loader/loader';
 import { useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 import Logo from './img.svg'
@@ -9,6 +10,7 @@ import { useCookies } from 'react-cookie';
 
 
 const Login = () => {
+    const [isloading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const nav = useNavigate()
@@ -32,8 +34,8 @@ const Login = () => {
         }
         if (f == 1) {
             return
-        }
-
+        }    
+        setLoading(true)
         const res = await fetch('/login', {
             method: "POST",
             headers: {
@@ -45,7 +47,7 @@ const Login = () => {
         })
 
         const data = await res.json();
-
+        setLoading(false)
         if (res.status != 200 || !data) {
             if(data.error=="Account Is Not Activated"){
                 swal({
@@ -86,6 +88,7 @@ const Login = () => {
     return (
         <>
             <Header />
+            {isloading && <Loader />}
             <div className="content d-flex justify-content-center align-items-center mt-5">
                 <div className="container">
                     <div className="row">

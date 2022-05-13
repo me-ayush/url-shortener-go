@@ -1,75 +1,76 @@
 import React, { useState } from 'react'
 import Header from '../navbar'
-import './css/home.scss'
-
-import ReactDOM from 'react-dom';
+import Loader from '../loader/loader'
 import swal from 'sweetalert';
+import './css/home.scss'
 
 
 const Home = () => {
-
+  const [isloading, setLoading] = useState(false)
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
   const domain = import.meta.env.VITE_DOMAIN
-  
-	var token = ''
-	var user_id = ''
-	token = JSON.parse(localStorage.getItem('token'))
-	user_id = JSON.parse(localStorage.getItem("id"))
+
+  var token = ''
+  var user_id = ''
+  token = JSON.parse(localStorage.getItem('token'))
+  user_id = JSON.parse(localStorage.getItem("id"))
 
   const handleAdd = async (e) => {
     e.preventDefault()
 
-    const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');  
+    const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
 
-    if(!regex.test(url)){
+    if (!regex.test(url)) {
       swal("Invalid URL", "", "error");
       return
     }
-    
+
+    setLoading(true)
     var res = ''
 
     if (!token || !user_id) {
-    res = await fetch("/api/v1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        "url": url,
-        "short": custom,
-      })
-    });
-  }else{
-    res = await fetch(`/user/${user_id}/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "token": token
-      },
-      body: JSON.stringify({
-        "url": url,
-        "short": custom,
-      })
-    });
-
-  }
+      res = await fetch("/api/v1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "url": url,
+          "short": custom,
+        })
+      });
+    } else {
+      res = await fetch(`/user/${user_id}/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "token": token
+        },
+        body: JSON.stringify({
+          "url": url,
+          "short": custom,
+        })
+      });
+    }
 
     const data = await res.json();
     if (res.status != 200 || !data) {
-      swal(data.error, "", "error");
+      swal(data.error, "", "error").then(() => {
+      });
     } else {
-      swal("Short Added", `Link: ${domain+data.short}`, "success");
+      swal("Short Added", `Link: ${domain + data.short}`, "success");
     }
-
+    setLoading(false)
   }
 
   return (
     <>
       <Header />
 
-      <section id='home'>
+      {isloading ? <Loader /> : null}
 
+      <section id='home'>
         <div className="banner">
           <div className="container">
             <div className="row">
@@ -102,21 +103,14 @@ const Home = () => {
                           <button className='btn btn-success mb-3 p-3 w-100'>Add This URL</button>
                         </div>
                       </div>
-
                     </div>
-
-
                   </div>
-
                 </form>
-
-
               </div>
             </div>
           </div>
         </div>
       </section>
-
     </>
   )
 }

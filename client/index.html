@@ -1,12 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>URL Shortener</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URL Shortener</title>
+  <style>
+    #loader {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+      display: grid;
+      place-items: center;
+    }
+
+    .cssload-container {
+      position: relative;
+    }
+
+    .cssload-whirlpool,
+    .cssload-whirlpool::before,
+    .cssload-whirlpool::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 1px solid rgb(204, 204, 204);
+      border-left-color: rgb(0, 0, 0);
+      border-radius: 974px;
+      -o-border-radius: 974px;
+      -ms-border-radius: 974px;
+      -webkit-border-radius: 974px;
+      -moz-border-radius: 974px;
+    }
+
+    .cssload-whirlpool {
+      margin: -24px 0 0 -24px;
+      height: 49px;
+      width: 49px;
+      animation: cssload-rotate 1150ms linear infinite;
+      -o-animation: cssload-rotate 1150ms linear infinite;
+      -ms-animation: cssload-rotate 1150ms linear infinite;
+      -webkit-animation: cssload-rotate 1150ms linear infinite;
+      -moz-animation: cssload-rotate 1150ms linear infinite;
+    }
+
+    .cssload-whirlpool::before {
+      content: "";
+      margin: -22px 0 0 -22px;
+      height: 43px;
+      width: 43px;
+      animation: cssload-rotate 1150ms linear infinite;
+      -o-animation: cssload-rotate 1150ms linear infinite;
+      -ms-animation: cssload-rotate 1150ms linear infinite;
+      -webkit-animation: cssload-rotate 1150ms linear infinite;
+      -moz-animation: cssload-rotate 1150ms linear infinite;
+    }
+
+    .cssload-whirlpool::after {
+      content: "";
+      margin: -28px 0 0 -28px;
+      height: 55px;
+      width: 55px;
+      animation: cssload-rotate 2300ms linear infinite;
+      -o-animation: cssload-rotate 2300ms linear infinite;
+      -ms-animation: cssload-rotate 2300ms linear infinite;
+      -webkit-animation: cssload-rotate 2300ms linear infinite;
+      -moz-animation: cssload-rotate 2300ms linear infinite;
+    }
+
+
+
+    @keyframes cssload-rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-o-keyframes cssload-rotate {
+      100% {
+        -o-transform: rotate(360deg);
+      }
+    }
+
+    @-ms-keyframes cssload-rotate {
+      100% {
+        -ms-transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes cssload-rotate {
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @-moz-keyframes cssload-rotate {
+      100% {
+        -moz-transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+        <div id="loader">
+          <div class="cssload-container">
+            <div class="cssload-whirlpool"></div>
+          </div>
+        </div>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

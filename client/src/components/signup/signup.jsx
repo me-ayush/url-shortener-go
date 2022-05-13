@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Loader from '../loader/loader';
 import { Link } from 'react-router-dom'
 import Header from '../navbar/index'
 import { useNavigate } from 'react-router-dom'
@@ -7,9 +8,8 @@ import swal from 'sweetalert';
 
 
 const Signup = () => {
-
     const nav = useNavigate();
-
+    const [isloading, setLoading] = useState(false)
     const [first, setFirst] = useState('')
     const [second, setSecond] = useState('')
     const [email, setEmail] = useState('')
@@ -58,6 +58,7 @@ const Signup = () => {
             return
         }
 
+        setLoading(true)
         const res = await fetch('/signup', {
             method: "POST",
             headers: {
@@ -73,6 +74,7 @@ const Signup = () => {
         })
 
         const data = await res.json()
+        setLoading(false)
         if (res.status !== 200 || !data) {
             swal(data.error, "", "error");
         } else {
@@ -85,6 +87,7 @@ const Signup = () => {
     return (
         <>
             <Header />
+    {isloading && <Loader />}
             <div className="content d-flex justify-content-center align-items-center mt-5">
                 <div className="container">
                     <div className="row">
