@@ -61,6 +61,10 @@ func ActivateAccount(token string) error {
 
 	oriToken := token
 
+	if len(token) < 200 {
+		return errors.New("activation token not valid")
+	}
+
 	part1 := token[:101]
 	token = token[100:]
 	reverse := reverseString(token)

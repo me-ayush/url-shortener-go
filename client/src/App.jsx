@@ -23,6 +23,8 @@ import Alllinks from './components/admin/alllinks'
 import Login from './components/login/login'
 import Signup from './components/signup/signup'
 import { Message } from "./components/admin/messages";
+import NewActivationCode from "./components/auth/new_activation_code";
+import ResetPassword from "./components/auth/reset_pass";
 
 
 
@@ -51,8 +53,12 @@ function App() {
           <Route path="/signin" element={<Login />} />
           <Route path="/register" element={<Signup />} />
 
-          <Route path="/auth" >
-            <Route path=":token" element={<Accountactivation />} />
+          <Route path="auth" >
+            <Route path="activate" >
+              <Route path=":token" element={<Accountactivation />} />
+            </Route>
+            <Route path="resetpass" element={<ResetPassword />}/>
+            <Route path="newcode" element={<NewActivationCode />}/>
           </Route>
 
           <Route exact path="*" >
