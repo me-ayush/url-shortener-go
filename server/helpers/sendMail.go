@@ -1,7 +1,9 @@
 package helpers
 
 import (
+	"bytes"
 	"fmt"
+	"html/template"
 	"net/smtp"
 	"os"
 	"strings"
@@ -11,41 +13,50 @@ import (
 
 type Mail struct {
 	Sender  string
+	From    string
 	To      []string
 	Subject string
 	Body    string
 }
 
-func SendMail(send_to string, subject string, body string) error {
+func SendMail(recieverName, send_to string, subject string, body string) error {
 
 	err := godotenv.Load()
 
-	from := os.Getenv("USER_NAME")
+	username := os.Getenv("USER_NAME")
 	password := os.Getenv("PASS_WORD")
+	smtpHost := "smtp.gmail.com"
+	smtpPort := "587"
+	auth := smtp.PlainAuth("", username, password, smtpHost)
+
+	t, err := template.ParseFiles("templates/verification_email.html")
+	if err != nil {
+		return err
+	}
+	var bodyx bytes.Buffer
+	t.Execute(&bodyx, struct {
+		Name string
+		URL  string
+	}{
+		Name: recieverName,
+		URL:  body,
+	})
 
 	to := []string{
 		fmt.Sprintf(send_to),
 	}
 
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
 	sender := "admin@url-shortener.com"
-
-	// body := `<p>An old <b>falcon</b> in the sky.</p>`
 	request := Mail{
 		Sender:  sender,
+		From:    sender,
 		To:      to,
 		Subject: subject,
-		Body:    body,
+		Body:    bodyx.String(),
 	}
 	message := buildMessage(request)
 
-	// Authentication.
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-
-	// Sending email.
-	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, []byte(message))
+	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, sender, to, []byte(message))
 	if err != nil {
 		return err
 	}
