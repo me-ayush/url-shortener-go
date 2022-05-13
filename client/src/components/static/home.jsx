@@ -11,19 +11,22 @@ const Home = () => {
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
   const domain = import.meta.env.VITE_DOMAIN
-
-  // console.log(import.meta.env.VITE_DOMAIN)
-
   
 	var token = ''
 	var user_id = ''
 	token = JSON.parse(localStorage.getItem('token'))
 	user_id = JSON.parse(localStorage.getItem("id"))
 
-
   const handleAdd = async (e) => {
     e.preventDefault()
 
+    const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');  
+
+    if(!regex.test(url)){
+      swal("Invalid URL", "", "error");
+      return
+    }
+    
     var res = ''
 
     if (!token || !user_id) {
@@ -71,7 +74,7 @@ const Home = () => {
           <div className="container">
             <div className="row">
               <div className="col-md-8 mt-5 pt-5 offset-md-2">
-                <div className="header-text caption text-center">
+                <div className="header-text caption text-center mt-5">
                   <h2 >Add Your URL Now</h2>
                 </div>
                 <form method='POST' id='suggestion_form' onSubmit={(e) => handleAdd(e)} autoComplete="false">
