@@ -1,12 +1,38 @@
 import React, { useState } from 'react'
+import {useNavigate} from 'react-router-dom'
 import './style.scss'
 
 const NewActivationCode = () => {
+  const nav = useNavigate()
   const [email, setEmail] = useState(false)
 
   const handleRequest = async(e) => {
     e.preventDefault();
-    console.log(email)
+    const path = import.meta.env.VITE_AUTH_NEW_CODE
+
+    const res = await fetch(`authentication/req_new_code/${email}`,{
+      method:"GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+    const data = await res.json();
+    if(res.status != 200 || !data){
+      const finalSentence = data.error.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+      swal({
+        title: finalSentence,
+        text: "",
+        icon: "error",
+        button: "Try Again",
+      });
+    }else{
+      swal({
+        title: "Activation Link Sent",
+        text: "",
+        icon: "success",
+        button: "Login Now",
+      }).then(()=>nav('/signin'));
+    }
 
   }
 

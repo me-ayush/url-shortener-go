@@ -35,6 +35,9 @@ func setupRoutes(app *fiber.App) {
 	admin.Get("/message", routes.GetMessages)
 	admin.Post("/message/:url_id", routes.DeleteMessage)
 
+	auth := app.Group("/auth")
+	auth.Get("/authentication/req_new_code/:email", routes.SendNewActivationCodeRoute)
+
 	app.Get("/validation/:token", routes.ActivateAccountRoute)
 	app.Get("/geturl/:url", routes.ResolveURL)
 	app.Post("/api/v1", routes.ShortenURL)

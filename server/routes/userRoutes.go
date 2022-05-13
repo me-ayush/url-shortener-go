@@ -132,3 +132,15 @@ func ActivateAccountRoute(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(queryValue)
 }
+
+func SendNewActivationCodeRoute(c *fiber.Ctx) error {
+
+	email := c.Params("email")
+	err := controllers.SendNewActivationCode(email)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON("Email Sent")
+}

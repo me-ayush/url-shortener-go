@@ -54,9 +54,9 @@ const Signup = () => {
             document.getElementById('cpassword').classList.remove('is-invalid')
         }
 
-        // if (f == 1) {
-        //     return
-        // }
+        if (f == 1) {
+            return
+        }
 
         const res = await fetch('/signup', {
             method: "POST",
@@ -76,7 +76,7 @@ const Signup = () => {
         if (res.status !== 200 || !data) {
             swal(data.error, "", "error");
         } else {
-            swal("Signup Successfully", "", "success").then((e)=>{
+            swal("Signup Successfully", "Check Your Email For Verification", "success").then((e)=>{
                 // nav('/signin')
               });
         }

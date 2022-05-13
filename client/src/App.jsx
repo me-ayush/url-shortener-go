@@ -25,6 +25,7 @@ import Signup from './components/signup/signup'
 import { Message } from "./components/admin/messages";
 import NewActivationCode from "./components/auth/new_activation_code";
 import ResetPassword from "./components/auth/reset_pass";
+import AuthIndex from "./components/auth/auth";
 
 
 
@@ -54,6 +55,7 @@ function App() {
           <Route path="/register" element={<Signup />} />
 
           <Route path="auth" >
+            <Route index element={<AuthIndex />} />
             <Route path="activate" >
               <Route path=":token" element={<Accountactivation />} />
             </Route>

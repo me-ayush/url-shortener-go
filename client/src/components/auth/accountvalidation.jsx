@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const Accountactivation = () => {
+    const nav = useNavigate()
     const {token} = useParams();
     console.log(token)
 
@@ -20,9 +21,13 @@ const Accountactivation = () => {
         console.log(data)
 
         if (res.status != 200 || !data) {
-            swal("Activation Error", data.error, "error");
+            swal("Activation Error", data.error, "error").then((e)=>{
+                nav('/signin')
+            });
         } else {
-            swal("Account Activated", "", "success");
+            swal("Account Activated", "", "success").then((e)=>{
+                nav('/signin')
+            });
         }
     }
 
