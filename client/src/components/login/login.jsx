@@ -47,7 +47,25 @@ const Login = () => {
         const data = await res.json();
 
         if (res.status != 200 || !data) {
-            swal("Login Error", data.error, "error");
+            if(data.error=="Account Is Not Activated"){
+                swal({
+                    title: data.error,
+                    icon: "error",
+                    buttons:{
+                        catch:{
+                            text:"Activate Now",
+                            value:true,
+                        },
+                        cancel: "I will do it later",
+                    },
+                  }).then((e)=>{
+                      if(e){
+                          nav('/auth/newcode')
+                      }
+                  });
+            }else{
+                swal("Login Error", data.error, "error");
+            }
         } else {
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
             localStorage.setItem('id', JSON.stringify(data.user_id))

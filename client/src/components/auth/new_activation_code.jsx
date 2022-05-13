@@ -6,9 +6,20 @@ const NewActivationCode = () => {
   const nav = useNavigate()
   const [email, setEmail] = useState(false)
 
+  const handleCancel = () => {
+    nav('/signin')
+  }
+
   const handleRequest = async(e) => {
     e.preventDefault();
     const path = import.meta.env.VITE_AUTH_NEW_CODE
+
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+      document.getElementById('floatingInput').classList.remove('is-invalid')
+    }else{
+      document.getElementById('floatingInput').classList.add('is-invalid')
+      return
+    }
 
     const res = await fetch(`authentication/req_new_code/${email}`,{
       method:"GET",
@@ -49,12 +60,13 @@ const NewActivationCode = () => {
                   <h3 className="text-center">New Activation Code</h3>
                   <form id="registerForm">
                     <div className="form-floating mb-3">
-                      <input type="text" className="form-control" placeholder="Input your Email" name="email" required onChange={(e)=>setEmail(e.target.value)} />
+                      <input type="text" className="form-control" id='floatingInput' placeholder="Input your Email" name="email" onChange={(e)=>setEmail(e.target.value)} required/>
                       <label htmlFor="userInput">Email</label>
                     </div>
 
                     <div className="text-center mb-5">
-                      <button className="btn btn-outline-primary mt-2" type="submit" onClick={handleRequest}>Request</button>
+                      <button className="btn btn-primary mt-2 mx-1" type="submit" onClick={handleRequest}>Request</button>
+                      <button className="btn btn-danger mt-2 mx-1" type="submit" onClick={handleCancel}>Cancel</button>
                     </div>
 
                   </form>
