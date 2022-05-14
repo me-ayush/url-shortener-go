@@ -15,7 +15,6 @@ import About from './components/static/about'
 
 import Addurl from './components/user/addurl'
 import Myurl from './components/user/myurl'
-import Profile from './components/user/profile'
 import ProfileIndex from './components/user/index'
 
 import Allusers from './components/admin/allusers'
@@ -29,7 +28,6 @@ import AuthIndex from "./components/auth/auth";
 import NewActivationCode from "./components/auth/new_activation_code";
 import Accountactivation from "./components/auth/accountvalidation";
 import ResetPassword from "./components/auth/reset_pass";
-import ProfileSettings from "./components/user/profile_settings";
 
 
 
@@ -69,7 +67,7 @@ function App() {
             <Route path="newcode" element={<NewActivationCode />}/>
           </Route>
 
-          <Route exact path="*" >
+          <Route path="*" >
             <Route path=":short" element={<Geturl />} />
           </Route>
 

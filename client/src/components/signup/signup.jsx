@@ -79,7 +79,7 @@ const Signup = () => {
             swal(data.error, "", "error");
         } else {
             swal("Signup Successfully", "Check Your Email For Verification", "success").then((e)=>{
-                // nav('/signin')
+                nav('/signin')
               });
         }
     }

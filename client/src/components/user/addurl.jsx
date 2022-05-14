@@ -1,45 +1,48 @@
 import React, { useState } from 'react'
 import Header from '../navbar/index'
 import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 
 const Addurl = () => {
     const [url, setUrl] = useState('')
     const [custom, setCustom] = useState('')
-    
-	const token = JSON.parse(localStorage.getItem('token'))
-	const user_id = JSON.parse(localStorage.getItem("id"))
 
-    const handleAdd = async(e) => {
+    const nav = useNavigate()
+
+    const token = JSON.parse(localStorage.getItem('token'))
+    const user_id = JSON.parse(localStorage.getItem("id"))
+
+    const handleAdd = async (e) => {
         e.preventDefault()
         if (!token || !user_id) {
-			window.alert('First Login...')
-			navigate("/login")
-		} else {
-			try {
-				const res = await fetch(`/user/${user_id}/add`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"token": token,
-					},
-                    body:JSON.stringify({
+            window.alert('First Login...')
+            nav("/login")
+        } else {
+            try {
+                const res = await fetch(`/user/${user_id}/add`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "token": token,
+                    },
+                    body: JSON.stringify({
                         "url": url,
-                        "short":custom,
+                        "short": custom,
                     })
-				});
+                });
 
-				const data = await res.json();
-				if (res.status != 200 || !data) {
+                const data = await res.json();
+                if (res.status != 200 || !data) {
                     swal(data.error, "", "error");
                     localStorage.clear();
-				} else {
+                } else {
                     swal("Short Added", "", "success");
-				}
-			} catch (err) {
+                }
+            } catch (err) {
                 swal(err, "", "error");
                 // console.warn(err);
-			}
-		}
+            }
+        }
 
     }
 
