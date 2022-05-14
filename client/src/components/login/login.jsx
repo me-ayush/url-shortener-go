@@ -34,7 +34,7 @@ const Login = () => {
         }
         if (f == 1) {
             return
-        }    
+        }
         setLoading(true)
         const res = await fetch('/login', {
             method: "POST",
@@ -71,6 +71,7 @@ const Login = () => {
         } else {
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
             localStorage.setItem('id', JSON.stringify(data.user_id))
+            localStorage.setItem('email', JSON.stringify(data.email))
             localStorage.setItem('token', JSON.stringify(data.token))
 
             if(data.user_type==="ADMIN"){

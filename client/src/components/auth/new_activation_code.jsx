@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Loader from '../loader/loader';
 import './style.scss'
 
 const NewActivationCode = () => {
   const nav = useNavigate()
+  const [isloading, setLoading] = useState(false)
   const [email, setEmail] = useState(false)
   const [show, setShow] = useState(true)
   const [countDown, setCountDown] = useState(0);
@@ -20,6 +22,7 @@ const NewActivationCode = () => {
 
   const handleRequest = async (e) => {
     e.preventDefault();
+    setLoading(true)
     const path = import.meta.env.VITE_AUTH_NEW_CODE
 
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -35,6 +38,7 @@ const NewActivationCode = () => {
         "Content-Type": "application/json"
       },
     })
+    setLoading(false)
     const data = await res.json();
     if (res.status != 200 || !data) {
       const finalSentence = data.error.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
@@ -49,22 +53,22 @@ const NewActivationCode = () => {
         title: "Activation Link Sent",
         icon: "success",
         text: "",
-        buttons:{
-            catch:{
-                text:"Login now",
-                value:true,
-            },
-            cancel: "Resend Link",
+        buttons: {
+          catch: {
+            text: "Login now",
+            value: true,
+          },
+          cancel: "Resend Link",
         },
-      }).then((e)=>{
-          if(e){
-              nav('/signin')
-          }
+      }).then((e) => {
+        if (e) {
+          nav('/signin')
+        }
       });
-      
-    setShow(false)
-    togglerTimer()
-    localStorage.setItem("flag", "1")
+
+      setShow(false)
+      togglerTimer()
+      localStorage.setItem("flag", "1")
     }
   }
 
@@ -97,8 +101,8 @@ const NewActivationCode = () => {
 
   return (
     <>
+      {isloading && <Loader />}
       <div id='new_activation_code_req'>
-
         <div className="container">
           <div className="row"><img src="https://iephosting.com/app/views/client/bootstrap/images/graphic8.svg" id="imageAsBackground" alt="" /></div>
           <div className="row align-items-center justify-content-center" style={{ height: '100vh', overflow: 'hidden' }}>

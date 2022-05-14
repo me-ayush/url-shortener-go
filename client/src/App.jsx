@@ -6,7 +6,7 @@ import {
 import './static/css/bootstrap.min.css'
 import './static/js/bootstrap.min.js'
 
-import Accountactivation from "./components/auth/accountvalidation";
+import Loader from "./components/loader/loader";
 
 import Geturl from "./components/static/Geturl";
 import Home from './components/static/home'
@@ -16,18 +16,20 @@ import About from './components/static/about'
 import Addurl from './components/user/addurl'
 import Myurl from './components/user/myurl'
 import Profile from './components/user/profile'
+import ProfileIndex from './components/user/index'
 
 import Allusers from './components/admin/allusers'
 import Alllinks from './components/admin/alllinks'
+import { Message } from "./components/admin/messages";
 
 import Login from './components/login/login'
 import Signup from './components/signup/signup'
-import { Message } from "./components/admin/messages";
-import NewActivationCode from "./components/auth/new_activation_code";
-import ResetPassword from "./components/auth/reset_pass";
-import AuthIndex from "./components/auth/auth";
-import Loader from "./components/loader/loader";
 
+import AuthIndex from "./components/auth/auth";
+import NewActivationCode from "./components/auth/new_activation_code";
+import Accountactivation from "./components/auth/accountvalidation";
+import ResetPassword from "./components/auth/reset_pass";
+import ProfileSettings from "./components/user/profile_settings";
 
 
 
@@ -46,7 +48,7 @@ function App() {
 
           <Route path="/addurl" element={<Addurl />} />
           <Route path="/myurl" element={<Myurl />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/*" element={<ProfileIndex />} />
 
           <Route path="/allusers">
             <Route index element={<Allusers />} />
