@@ -20,7 +20,7 @@ const Alllinks = () => {
     const getUsers = async () => {
         if (!token || !user_id || !user && cookies._jwt != "") {
             swal("Please Login", "", "error");
-            navigate("/login")
+            navigate("/signin")
         } else {
             try {
                 setLoading(true)
@@ -43,8 +43,8 @@ const Alllinks = () => {
                     setLinks(data)
                 }
             } catch (err) {
-                // alert(err);
                 setLoading(false)
+                swal(err, "", "error");
             }
         }
     }
@@ -71,8 +71,7 @@ const Alllinks = () => {
         if (res.status != 200 || !data) {
             swal(data.error, "", "error");
         } else {
-            swal("Link Deleted", "", "success");
-            getUsers()
+            swal("Link Deleted", "", "success").then(()=>{getUsers()});
         }
     }
 

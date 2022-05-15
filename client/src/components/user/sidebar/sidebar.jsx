@@ -1,19 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import './style.scss'
 
 const SidebarUser = () => {
-
-    var name = localStorage.getItem("user")
-    name = name.slice(1, name.length - 1)
-    
-    var email = localStorage.getItem("email")
-    email = email.slice(1, email.length - 1)
-
+    const nav = useNavigate()
+    const token = JSON.parse(localStorage.getItem('token'))
+    const user_id = JSON.parse(localStorage.getItem("id"))
+    useEffect(() => {
+        if (!token || !user_id) {
+            swal("Wrong Credentials", "", "error");
+            nav("/signin")
+        }
+    })
+    try{
+        var name = localStorage.getItem("user")
+        name = name.slice(1, name.length - 1)
+        var email = localStorage.getItem("email")
+        email = email.slice(1, email.length - 1)
+    }
+    catch{}
     const toggleMenu = (e) => {
         e.preventDefault();
         document.getElementById('sidebar').classList.toggle("active")
     }
+    
     return (
         <>
             <nav id="sidebar">

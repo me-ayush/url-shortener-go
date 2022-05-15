@@ -10,6 +10,7 @@ export const Message = () => {
   let navigate = useNavigate()
   const [isloading, setLoading] = useState(false)
   const [data, setdata] = useState(false)
+  const [messages, setMessages] = useState(false)
   const [cookies, setCookies] = useCookies(['user']);
 
   const token = JSON.parse(localStorage.getItem('token'))
@@ -20,7 +21,7 @@ export const Message = () => {
 
     if (!token || !user_id || !user && cookies._jwt) {
       swal("Please Login", "", "error");
-      navigate("/login")
+      navigate("/signin")
     } else {
       try {
         setLoading(true)
@@ -38,10 +39,12 @@ export const Message = () => {
         if (res.status !== 200 || !data) {
           swal(data.error, "", "error");
         } else {
-          setdata(data)
+          setMessages(data)
+          setdata(false)
         }
       } catch (err) {
         setLoading(false)
+        setdata(true)
       }
     }
   }
@@ -68,8 +71,7 @@ export const Message = () => {
       if (res.status !== 200 || !data) {
         swal(data.error, "", "error");
       } else {
-        swal("Message Deleted", "", "success");
-        getMessages()
+        swal("Message Deleted", "", "success").then(()=>{getMessages()});
       }
     } catch (e) {
       swal("Something Went Wrong", "", "error");
@@ -95,9 +97,9 @@ export const Message = () => {
             </tr>
           </thead>
           <tbody>
-            {!data ? <><tr><td colSpan="6" className='text-center fs-3'>No Messages Yet...</td></tr></> : null}
+            {data ? <><tr><td colSpan="6" className='text-center fs-3'>No Messages Yet...</td></tr></> : null}
             {
-              data && data.map((d, key) => {
+              !data && messages && messages.map((d, key) => {
                 return (
                   <tr key={key}>
                     <td>{key + 1}</td>

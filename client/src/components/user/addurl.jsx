@@ -16,7 +16,7 @@ const Addurl = () => {
         e.preventDefault()
         if (!token || !user_id) {
             window.alert('First Login...')
-            nav("/login")
+            nav("/signin")
         } else {
             try {
                 const res = await fetch(`/user/${user_id}/add`, {

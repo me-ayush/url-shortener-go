@@ -25,7 +25,7 @@ const Myurl = () => {
 		setLoading(true)
 		if (!token || !user_id) {
 			swal("Wrong Credentials", "", "error");
-			nav("/login")
+			nav("/signin")
 		} else {
 			try {
 				const res = await fetch(`/user/mylinks/${user_id}`, {
@@ -73,8 +73,7 @@ const Myurl = () => {
 		if (res.status !== 200 || !data) {
 			swal(data.error, "", "error");
 		} else {
-			swal("Successfully Deleted", "", "success");
-			set_links()
+			swal("Successfully Deleted", "", "success").then(()=>{set_links()});
 		}
 	}
 

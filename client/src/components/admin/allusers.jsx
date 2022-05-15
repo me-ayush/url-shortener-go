@@ -21,7 +21,7 @@ const Allusers = () => {
   const getUsers = async () => {
     if (!token || !user_id || !user && cookies._jwt) {
       swal("Login First", "", "error").then(() => {
-        navigate("/login")
+        navigate("/signin")
       });
     } else {
       setLoading(true)
@@ -38,14 +38,14 @@ const Allusers = () => {
         setLoading(false)
         const data = await res.json();
         if (res.status !== 200 || !data) {
-          swal(data.error, "", "error");
           localStorage.clear()
           navigate("/")
         } else {
           setdata(data)
         }
       } catch (err) {
-        alert(err);
+        swal(err, "", "error");
+        setLoading(false)
       }
     }
   }
@@ -71,8 +71,7 @@ const Allusers = () => {
     if (res.status != 200 || !data) {
       swal(data.error, "", "error")
     } else {
-      swal("User Deleted", "", "success")
-      getUsers()
+      swal("User Deleted", "", "success").then(()=>{getUsers()})
     }
 
   }
@@ -105,8 +104,7 @@ const Allusers = () => {
     if (res.status != 200 || !data) {
       swal(data.error, "", "error");
     } else {
-      swal("User Updated", "", "success");
-      getUsers()
+      swal("User Updated", "", "success").then(()=>{getUsers()});
     }
 
   }

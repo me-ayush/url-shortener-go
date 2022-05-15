@@ -78,7 +78,7 @@ const Profile = () => {
       if (res.status != 200 || !data) {
         swal(data.error, "", "error");
         localStorage.clear()
-        nav("/login")
+        nav("/signin")
       } else {
         setDetail({
           first: data.first_name,
@@ -99,7 +99,7 @@ const Profile = () => {
     if (!token || !user_id || !user || token == '' || user_id == '' || user == '') {
       localStorage.clear()
       swal("Wrong Credentials", "", "error");
-      nav("/login")
+      nav("/signin")
     } else {
       check_auth()
     }

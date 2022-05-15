@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SidebarUser from './sidebar/sidebar';
 import UserProfileRoutes from './routes/userroiutes';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileIndex = () => {
+    const nav = useNavigate()
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem('token'))
+        const user_id = JSON.parse(localStorage.getItem("id"))
+        if (!token || !user_id) {
+            swal("Wrong Credentials", "", "error");
+            nav("/signin")
+        }
+    })
+    
+
     return (
         <>
             <div id="profile-wrapper">
