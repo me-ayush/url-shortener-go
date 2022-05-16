@@ -27,17 +27,21 @@ func ResolveURL(c *fiber.Ctx) error {
 		// return c.Status(fiber.StatusNotFound).Render("404", fiber.Map{
 		// 	"Msg": "404 Not Found",
 		// })
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "404 Not Found"})
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": "404 Not Found", "type": "404"})
+	}
+
+	if urlDetail.Expiry.Unix() <= time.Now().Unix() {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Link Expired on ", "type": "expired"})
 	}
 
 	x, _ := strconv.Atoi(urlDetail.Clicks)
-	// fmt.Println(x)
 	urlDetail.Clicks = strconv.Itoa(x + 1)
 
 	_, _ = mdb.UpdateOne(ctx,
 		bson.M{"short": urlDetail.Short},
 		bson.M{"$set": urlDetail},
 	)
+	// fmt.Println(urlDetail.Expiry.Format(time.ANSIC))
 
 	// return c.Redirect(urlDetail.URL, 301)
 	return c.Status(fiber.StatusOK).JSON(urlDetail.URL)

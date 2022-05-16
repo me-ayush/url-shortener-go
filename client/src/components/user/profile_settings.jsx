@@ -1,9 +1,22 @@
 import React from 'react'
 
 const ProfileSettings = () => {
+
+  const handleChangePass = (e) =>{
+    e.preventDefault()
+  }
+
+  const handleDeactivate = (e) =>{
+    e.preventDefault()
+  }
+
+  const handleDelete = (e) =>{
+    e.preventDefault()
+  }
+
   return (
     <div>
-      <div className="accordion">
+      <div className="accordion ms-3">
 
         <div className="accordion-item">
           <h2 className="accordion-header">
@@ -14,18 +27,18 @@ const ProfileSettings = () => {
           <div id="changePass" className="accordion-collapse collapse">
             <div className="accordion-body">
 
-              <form  autoComplete="off">
+              <form  autoComplete="off" onSubmit={handleChangePass}>
                 <div className="form-floating mb-3">
-                  <input type="password" className="form-control shadow-none" id="floatingPassword" placeholder="Password" required />
-                  <label htmlFor="floatingPassword">Old Password</label>
+                  <input type="password" className="form-control shadow-none" id="floatingPassword1" placeholder="Password" required />
+                  <label htmlFor="floatingPassword1">Old Password</label>
                 </div>
                 <div className="form-floating mb-3">
-                  <input type="password" className="form-control shadow-none" id="floatingPassword" placeholder="Password" required />
-                  <label htmlFor="floatingPassword">New Password</label>
+                  <input type="password" className="form-control shadow-none" id="floatingPassword2" placeholder="Password" required />
+                  <label htmlFor="floatingPassword2">New Password</label>
                 </div>
                 <div className="form-floating mb-3">
-                  <input type="password" className="form-control shadow-none" id="floatingPassword" placeholder="Password" required />
-                  <label htmlFor="floatingPassword">Confirm Password</label>
+                  <input type="password" className="form-control shadow-none" id="floatingPassword3" placeholder="Password" required />
+                  <label htmlFor="floatingPassword3">Confirm Password</label>
                 </div>
 
                 <button className='btn btn-success' style={{ width: "200px" }}>Update Password</button>
@@ -45,7 +58,7 @@ const ProfileSettings = () => {
           <div id="deactivateAccount" className="accordion-collapse collapse">
             <div className="accordion-body">
 
-              <form>
+              <form onSubmit={handleDeactivate}>
                 <div className="row">
                   <div className="col-12 mb-2">
                     <input type="checkbox" name="" id="check-deactivate" required />
@@ -70,7 +83,7 @@ const ProfileSettings = () => {
           <div id="deleteAccount" className="accordion-collapse collapse">
             <div className="accordion-body">
 
-              <form>
+              <form onSubmit={handleDelete}>
                 <div className="row">
                   <div className="col-12 mb-2">
                     <input type="checkbox" name="" id="check-delete" required />

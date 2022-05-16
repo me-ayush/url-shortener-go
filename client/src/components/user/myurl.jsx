@@ -91,7 +91,7 @@ const Myurl = () => {
 								<thead>
 									<tr className="row100 head">
 										<th className="column100 column1" data-column="column1">#</th>
-										<th className="column100 column2" data-column="column2">Id</th>
+										{/* <th className="column100 column2" data-column="column2">Id</th> */}
 										<th className="column100 column3" data-column="column3">URL</th>
 										<th className="column100 column4" data-column="column4">Short</th>
 										<th className="column100 column5" data-column="column5">Clicks</th>
@@ -106,11 +106,11 @@ const Myurl = () => {
 									{data && links && links.map((item, i) => (
 										<tr className="row100" key={i}>
 											<td className="column100 column1" data-column="column1">{i + 1}</td>
-											<td className="column100 column2" data-column="column2">{item._id}</td>
+											{/* <td className="column100 column2" data-column="column2">{item._id}</td> */}
 											<td className="column100 column3" data-column="column3"><a href={item.url} target="_blank">{item.url}</a></td>
 											<td className="column100 column4" data-column="column4"><Link to={'/' + item.short} target="_blank">{item.short}</Link></td>
 											<td className="column100 column5" data-column="column5">{getMinute(item.clicks)}</td>
-											<td className="column100 column5" data-column="column5">{getMinute(item.expiry)}</td>
+											<td className="column100 column5" data-column="column5">{getMinute(item.expiryat)}</td>
 											{/* <td className="column100 column6" data-column="column6">{item.rate_limit == 0 ? <>--</> : item.rate_limit}</td> */}
 											{/* <td className="column100 column7" data-column="column6">{item.rate_limit_reset == 0 ? <>--</> : item.rate_limit_reset}</td> */}
 											<td className='column100 column8 text-center p-0 m-0 btn-c'><button className='btn btn-danger' value={item._id} onClick={(e) => handleDelete(e)}>Delete</button> </td>

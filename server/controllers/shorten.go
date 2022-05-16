@@ -20,9 +20,9 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 
 	// check if the input is an actual URL
 	resp := models.Response{
-		URL:    "",
-		Short:  "",
-		Expiry: 0,
+		URL:   "",
+		Short: "",
+		// Expiry: 0,
 	}
 	err := *new(error)
 	if !govalidator.IsURL(body.URL) {
@@ -66,11 +66,20 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 		return msg, resp, err
 	}
 
-	if body.Expiry == 0 {
-		body.Expiry = 24
+	// if body.Expiry == 0 {
+	// 	body.Expiry = 24
+	// }
+	if body.ExpiryDays <= 0 {
+		today := time.Now()
+		body.Expiry = today.Add(-24 * time.Hour)
+	} else {
+		today := time.Now()
+		body.Expiry = today.Add(time.Duration(body.ExpiryDays*24) * time.Hour)
 	}
 
-	body.Expiry = body.Expiry * 3600 * time.Second
+	body.ExpiryAt = body.Expiry.Format(time.ANSIC)
+
+	// body.Expiry = body.Expiry * 3600 * time.Second
 	body.Clicks = strconv.Itoa(0)
 
 	res, err := mdb.InsertOne(ctx, body)
@@ -81,10 +90,13 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 	}
 
 	resp = models.Response{
-		URL:    body.URL,
-		Short:  body.Short,
-		Expiry: body.Expiry,
+		URL:      body.URL,
+		Short:    body.Short,
+		Expiry:   body.Expiry,
+		ExpiryAt: body.Expiry.Format(time.ANSIC),
+		// Expiry2: body.Expiry2,
 	}
+
 	// resp.URL_ID = primitive.NewObjectID().Hex()
 	// x := fmt.Sprint(res.InsertedID)
 	x, _ := res.InsertedID.(primitive.ObjectID)

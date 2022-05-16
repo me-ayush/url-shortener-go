@@ -67,7 +67,6 @@ const Alllinks = () => {
         })
         setLoading(false)
         const data = await res.json()
-        console.log(data)
         if (res.status != 200 || !data) {
             swal(data.error, "", "error");
         } else {
@@ -106,7 +105,7 @@ const Alllinks = () => {
                                             <td className="column100 column3" data-column="column3"><a href={item.url} target="_blank">{item.url}</a></td>
                                             <td className="column100 column4" data-column="column4"><Link to={'/' + item.short} target="_blank">{item.short}</Link></td>
                                             <td className="column100 column5" data-column="column5">{(item.clicks)}</td>
-                                            <td className="column100 column5" data-column="column5">{(item.expiry)}</td>
+                                            <td className="column100 column5" data-column="column5">{(item.expiryat)}</td>
                                             <td className='column100 column8 text-center p-0 m-0 btn-c'><button className='btn btn-danger' value={item._id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
                                         </tr>
                                     ))}
