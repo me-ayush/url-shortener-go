@@ -71,7 +71,7 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 	// }
 	if body.ExpiryDays <= 0 {
 		today := time.Now()
-		body.Expiry = today.Add(-24 * time.Hour)
+		body.Expiry = today.Add(24 * time.Hour)
 	} else {
 		today := time.Now()
 		body.Expiry = today.Add(time.Duration(body.ExpiryDays*24) * time.Hour)
