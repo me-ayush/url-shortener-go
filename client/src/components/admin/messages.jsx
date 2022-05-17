@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { handleSearch, sortData } from './helpers';
 import { useNavigate, Link } from 'react-router-dom'
 import Loader from '../loader/loader';
 import Header from '../navbar'
@@ -12,6 +13,11 @@ export const Message = () => {
   const [data, setdata] = useState(false)
   const [messages, setMessages] = useState(false)
   const [cookies, setCookies] = useCookies(['user']);
+
+  const [filteredData, setFilteredData] = useState(data);
+  const [searchField, setSearchField] = useState("");
+  const [sortedField, setSortedField] = useState();
+  const [sortBy, setSortBy] = useState(0);
 
   const token = JSON.parse(localStorage.getItem('token'))
   const user_id = JSON.parse(localStorage.getItem("id"))
@@ -40,6 +46,8 @@ export const Message = () => {
           swal(data.error, "", "error");
         } else {
           setMessages(data)
+          setFilteredData(data)
+          console.log(data)
           setdata(false)
         }
       } catch (err) {
@@ -71,12 +79,29 @@ export const Message = () => {
       if (res.status !== 200 || !data) {
         swal(data.error, "", "error");
       } else {
-        swal("Message Deleted", "", "success").then(()=>{getMessages()});
+        swal("Message Deleted", "", "success").then(() => { getMessages() });
       }
     } catch (e) {
       swal("Something Went Wrong", "", "error");
       setLoading(false)
     }
+  }
+
+  const handleChange = (e) => {
+    let x = handleSearch(e, searchField, messages)
+    if(x != undefined){
+      setFilteredData(x)
+    }
+  }
+
+  const handelSorting = (field) => {
+    if (field == sortedField) {
+      setSortBy(sortBy => !sortBy)
+    } else {
+      setSortBy(1)
+    }
+    setSortedField(field)
+    setFilteredData(sortData(field, filteredData, sortBy))
   }
 
   return (
@@ -85,13 +110,34 @@ export const Message = () => {
       {isloading && <Loader />}
       <div className="container mt-5">
         <h2 className='text-center'>All Messages</h2>
+        {messages &&
+          <form className='mt-2'>
+            <div className='row'>
+              <div className="col-sm-12 col-md-2 mb-2">
+                <select className="form-select shadow-none" onChange={(e) => { setSearchField(e.target.value.toLowerCase()) }} defaultValue={'DEFAULT'} >
+                  <option value="DEFAULT" disabled>Select Filter</option>
+                  <option value="email">Email</option>
+                  <option value="subject">Subject</option>
+                  <option value="name">Name</option>
+                </select>
+              </div>
+              <div className="col-sm-12 col-md-9">
+                <input type="search" className='form-control shadow-none' placeholder="Type Something" onChange={(e) => handleChange(e)} />
+              </div>
+            </div>
+          </form>
+        }
         <table className="table  table-striped table-hover w-100 text-center">
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Name</th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('name')}>Name</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('email')}>Email</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('subject')}>Subject</button></th>
+
+              {/* <th scope="col">Name</th>
               <th scope="col">Email</th>
-              <th scope="col">Subject</th>
+              <th scope="col">Subject</th> */}
               <th scope="col">Message</th>
               <th scope="col">Action</th>
             </tr>
@@ -99,7 +145,7 @@ export const Message = () => {
           <tbody>
             {data ? <><tr><td colSpan="6" className='text-center fs-3'>No Messages Yet...</td></tr></> : null}
             {
-              !data && messages && messages.map((d, key) => {
+              !data && filteredData && filteredData.map((d, key) => {
                 return (
                   <tr key={key}>
                     <td>{key + 1}</td>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../loader/loader';
 import { useNavigate, Link } from 'react-router-dom'
 import Header from '../navbar'
+import { handleSearch, sortData } from './helpers';
 import { useCookies } from 'react-cookie';
 import swal from 'sweetalert';
 
@@ -13,6 +14,12 @@ const Allusers = () => {
   const [data, setdata] = useState(false)
   const [updateuser, setUpdateuser] = useState()
   const [cookies, setCookies] = useCookies(['user']);
+
+
+  const [filteredData, setFilteredData] = useState(data);
+  const [searchField, setSearchField] = useState("");
+  const [sortedField, setSortedField] = useState();
+  const [sortBy, setSortBy] = useState(0);
 
   const token = JSON.parse(localStorage.getItem('token'))
   const user_id = JSON.parse(localStorage.getItem("id"))
@@ -42,6 +49,7 @@ const Allusers = () => {
           navigate("/")
         } else {
           setdata(data)
+          setFilteredData(data)
         }
       } catch (err) {
         swal(err, "", "error");
@@ -83,7 +91,6 @@ const Allusers = () => {
   }
 
   const handleSave = async (e) => {
-    // console.log(updateuser)
     setLoading(true)
     const res = await fetch(`admin/users/${e.target.value}`, {
       method: "POST",
@@ -137,27 +144,63 @@ const Allusers = () => {
     })
   }
 
+  const handleChange = (e) => {
+    let x = handleSearch(e, searchField, data)
+    if(x != undefined){
+      setFilteredData(x)
+    }
+  }
+
+  const handelSorting = (field) => {
+    if (field == sortedField) {
+      setSortBy(sortBy => !sortBy)
+    } else {
+      setSortBy(1)
+    }
+    setSortedField(field)
+    setFilteredData(sortData(field, filteredData, sortBy))
+  }
+
   return (
     <>
       <Header />
       {isloading && <Loader />}
       <h2 className='text-center mt-5'>User Data</h2>
       <div className="container mt-1" style={{ "overflow": "auto" }}>
+        {data &&
+          <form className='mt-2'>
+            <div className='row'>
+              <div className="col-sm-12 col-md-2 mb-2">
+                <select className="form-select shadow-none" onChange={(e) => { setSearchField(e.target.value.toLowerCase()) }} defaultValue={'DEFAULT'} >
+                  <option value="DEFAULT" disabled>Select Filter</option>
+                  <option value="first_name">First Name</option>
+                  <option value="last_name">Last Name</option>
+                  <option value="email">Email</option>
+                  <option value="user_type">User Type</option>
+                  <option value="is_activated">Status</option>
+                </select>
+              </div>
+              <div className="col-sm-12 col-md-9">
+                <input type="search" className='form-control shadow-none' placeholder="Type Something" onChange={(e) => handleChange(e)} />
+              </div>
+            </div>
+          </form>
+        }
         <table className="table table-striped table-hover w-100 text-center">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">User Type</th>
-              <th scope="col">Status</th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting(null)}>#</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('first_name')}>First Name</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('last_name')}>Last Name</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('email')}>Email</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('user_type')}>User Type</button></th>
+              <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('is_activated')}>Status</button></th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
             {
-              data && data.map((d, key) => {
+              filteredData && filteredData.map((d, key) => {
                 return (
                   <tr key={d.user_id}>
 
@@ -168,13 +211,13 @@ const Allusers = () => {
                     {/* <td>{d.user_id}</td> */}
                     {
                       d.user_type === 'ADMIN' ?
-                      <td>Admin</td> :
-                      <td>User</td>
+                        <td>Admin</td> :
+                        <td>User</td>
                     }
                     {
                       d.is_activated == '1' ?
-                      <td>Activated</td> :
-                      <td>Deactivated</td>
+                        <td>Activated</td> :
+                        <td>Deactivated</td>
                     }
                     <td className='column-8'>
                       <button className='btn btn-info  mx-1 my-1' value={[d._id + key]} defaultValue={d._id} data-bs-toggle="modal" data-bs-target={`#view${key + 1}`} onClick={handleView}>View</button>

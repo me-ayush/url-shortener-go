@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { handleSearch, sortData } from './helpers';
 import { useNavigate, Link } from 'react-router-dom'
 import Loader from '../loader/loader';
 import Header from '../navbar'
@@ -80,18 +81,23 @@ const Alllinks = () => {
     }
 
     const handleChange = (e) => {
-        try {
-            let value = e.target.value.toLowerCase();
-            let result = [];
-            result = links.filter((data) => {
-                let x = data[searchField].toLowerCase();
-                return x.search(value) != -1;
-            });
-            setFilteredData(result);
-        } catch { }
+        
+        let x = handleSearch(e, searchField, links)
+        if(x != undefined){
+        setFilteredData(x)
+        }
+        // try {
+        //     let value = e.target.value.toLowerCase();
+        //     let result = [];
+        //     result = links.filter((data) => {
+        //         let x = data[searchField].toLowerCase();
+        //         return x.search(value) != -1;
+        //     });
+        //     setFilteredData(result);
+        // } catch { }
     };
 
-    const sortData = (field) => {
+    const handelSorting = (field) => {
         setLoading(true)
         if(field == sortedField){
             setSortBy(sortBy => !sortBy)
@@ -99,19 +105,20 @@ const Alllinks = () => {
             setSortBy(1)
         }
         setSortedField(field)
-        let x = [...filteredData];
-        if (field !== null) {
-            x.sort((a, b) => {
-                if (a[field] < b[field]) {
-                    return sortBy ? 1 : -1;
-                }
-                if (a[field] > b[field]) {
-                    return sortBy ? -1 : 1;
-                }
-                return 0;
-            });
-        }
-        setFilteredData(x)
+        setFilteredData(sortData(field, filteredData, sortBy))
+        // let x = [...filteredData];
+        // if (field !== null) {
+        //     x.sort((a, b) => {
+        //         if (a[field] < b[field]) {
+        //             return sortBy ? 1 : -1;
+        //         }
+        //         if (a[field] > b[field]) {
+        //             return sortBy ? -1 : 1;
+        //         }
+        //         return 0;
+        //     });
+        // }
+        // setFilteredData(x)
         setLoading(false)
     }
 
@@ -144,13 +151,13 @@ const Alllinks = () => {
                 <table className="table  table-striped table-hover w-100 text-center mt-3">
                     <thead>
                         <tr>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData(null)}>#</button></th>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData('_id')}>ID</button></th>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData('user')}>Added By</button></th>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData('url')}>URL</button></th>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData('short')}>Short</button></th>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData('clicks')}>Clicks</button></th>
-                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => sortData('expiryat')}>Expiry On</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting(null)}>#</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('_id')}>ID</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('user')}>Added By</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('url')}>URL</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('short')}>Short</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('clicks')}>Clicks</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('expiryat')}>Expiry On</button></th>
 
                             {/* <th scope="col" onClick={() => setSortedField('user')}>Added By</th>
                             <th scope="col" onClick={() => setSortedField('url')}>URL</th>
