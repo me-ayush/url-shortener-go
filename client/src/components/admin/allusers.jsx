@@ -134,8 +134,8 @@ const Allusers = () => {
     <>
       <Header />
       {isloading && <Loader />}
-      <div className="container mt-5" style={{ "overflow": "auto" }}>
-        <h2 className='text-center'>User Data</h2>
+        <h2 className='text-center mt-5'>User Data</h2>
+      <div className="container mt-1" style={{ "overflow": "auto" }}>
         <table className="table table-striped table-hover w-100 text-center">
           <thead>
             <tr>

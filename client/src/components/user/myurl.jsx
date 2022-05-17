@@ -73,7 +73,7 @@ const Myurl = () => {
 		if (res.status !== 200 || !data) {
 			swal(data.error, "", "error");
 		} else {
-			swal("Successfully Deleted", "", "success").then(()=>{set_links()});
+			swal("Successfully Deleted", "", "success").then(() => { set_links() });
 		}
 	}
 
@@ -82,50 +82,39 @@ const Myurl = () => {
 		<>
 			<Header />
 			{isloading && <Loader />}
-			<div className="limiter">
-				<div className="container-table100">
-					<div className="wrap-table100">
-
-						<div className="table100 ver1 m-b-110">
-							<table data-vertable="ver1">
-								<thead>
-									<tr className="row100 head">
-										<th className="column100 column1" data-column="column1">#</th>
-										{/* <th className="column100 column2" data-column="column2">Id</th> */}
-										<th className="column100 column3" data-column="column3">URL</th>
-										<th className="column100 column4" data-column="column4">Short</th>
-										<th className="column100 column5" data-column="column5">Clicks</th>
-										<th className="column100 column5" data-column="column5">Expiry</th>
-										{/* <th className="column100 column6" data-column="column6">Rate Limit</th> */}
-										{/* <th className="column100 column7" data-column="column7">Rate Limit Reset</th> */}
-										<th className="column100 column7 ps-5" data-column="column7">Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									{!data && <><tr><td colSpan={7} className='text-center fs-3'>No Links Yet...</td></tr></>}
-									{data && links && links.map((item, i) => (
-										<tr className="row100" key={i}>
-											<td className="column100 column1" data-column="column1">{i + 1}</td>
-											{/* <td className="column100 column2" data-column="column2">{item._id}</td> */}
-											<td className="column100 column3" data-column="column3"><a href={item.url} target="_blank">{item.url}</a></td>
-											<td className="column100 column4" data-column="column4"><Link to={'/' + item.short} target="_blank">{item.short}</Link></td>
-											<td className="column100 column5" data-column="column5">{getMinute(item.clicks)}</td>
-											<td className="column100 column5" data-column="column5">{getMinute(item.expiryat)}</td>
-											{/* <td className="column100 column6" data-column="column6">{item.rate_limit == 0 ? <>--</> : item.rate_limit}</td> */}
-											{/* <td className="column100 column7" data-column="column6">{item.rate_limit_reset == 0 ? <>--</> : item.rate_limit_reset}</td> */}
-											<td className='column100 column8 text-center p-0 m-0 btn-c'><button className='btn btn-danger' value={item._id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-					</div>
+			<div id="user-table">
+				<div className="container mt-5 p-0" style={{ "overflow": "auto" }}>
+					<table className="table table-striped table-hover w-100 text-center">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">URL</th>
+								<th scope="col">Short</th>
+								<th scope="col">Clicks</th>
+								<th scope="col">Expiry</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{!data && <><tr><td colSpan={7} className='text-center fs-3'>No Links Yet...</td></tr></>}
+							{data && links && links.map((item, i) => (
+								<tr key={i}>
+									<td>{i + 1}</td>
+									{/* <td className="column100 column2" data-column="column2">{item._id}</td> */}
+									<td><a href={item.url} target="_blank">{item.url}</a></td>
+									<td><Link to={'/' + item.short} target="_blank">{item.short}</Link></td>
+									<td>{getMinute(item.clicks)}</td>
+									<td>{getMinute(item.expiryat)}</td>
+									{/* <td className="column100 column6" data-column="column6">{item.rate_limit == 0 ? <>--</> : item.rate_limit}</td> */}
+									{/* <td className="column100 column7" data-column="column6">{item.rate_limit_reset == 0 ? <>--</> : item.rate_limit_reset}</td> */}
+									<td className='btn-c'><button className='btn btn-danger' value={item._id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
 			</div>
-
-
 		</>
-
 	)
 }
 

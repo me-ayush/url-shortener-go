@@ -93,6 +93,10 @@ func DeleteURL(c *fiber.Ctx) error {
 	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
+	err := controllers.MatchURLParent(userId, urlId)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
 	msg, resp, err := controllers.DelShorten(urlId)
 
 	// if err != nil {

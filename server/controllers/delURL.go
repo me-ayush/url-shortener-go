@@ -2,12 +2,31 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"time"
 	"url-shortener/database"
+	"url-shortener/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+func MatchURLParent(userid string, urlId string) error {
+	mdb := database.OpenCollection(database.Client, "shorten-urls")
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+
+	var url models.Response
+	id, _ := primitive.ObjectIDFromHex(urlId)
+
+	_ = mdb.FindOne(ctx, bson.M{"_id": id}).Decode(&url)
+	defer cancel()
+
+	if url.Addedby != userid {
+		return errors.New("user not valid")
+	}
+
+	return nil
+}
 
 func DelShorten(urlId string) (string, int64, error) {
 
