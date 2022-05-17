@@ -71,7 +71,7 @@ const Allusers = () => {
     if (res.status != 200 || !data) {
       swal(data.error, "", "error")
     } else {
-      swal("User Deleted", "", "success").then(()=>{getUsers()})
+      swal("User Deleted", "", "success").then(() => { getUsers() })
     }
 
   }
@@ -83,6 +83,7 @@ const Allusers = () => {
   }
 
   const handleSave = async (e) => {
+    // console.log(updateuser)
     setLoading(true)
     const res = await fetch(`admin/users/${e.target.value}`, {
       method: "POST",
@@ -96,7 +97,8 @@ const Allusers = () => {
         first_name: updateuser.first_name,
         last_name: updateuser.last_name,
         email: updateuser.email,
-        user_type: updateuser.user_type
+        user_type: updateuser.user_type,
+        isactivated: Number(updateuser.is_activated)
       })
     })
     setLoading(false)
@@ -104,7 +106,7 @@ const Allusers = () => {
     if (res.status != 200 || !data) {
       swal(data.error, "", "error");
     } else {
-      swal("User Updated", "", "success").then(()=>{getUsers()});
+      swal("User Updated", "", "success").then(() => { getUsers() });
     }
 
   }
@@ -129,12 +131,17 @@ const Allusers = () => {
       return { ...prevState, user_type: e.target.value }
     })
   }
+  function handleisActive(e) {
+    setUpdateuser(prevState => {
+      return { ...prevState, is_activated: e.target.value }
+    })
+  }
 
   return (
     <>
       <Header />
       {isloading && <Loader />}
-        <h2 className='text-center mt-5'>User Data</h2>
+      <h2 className='text-center mt-5'>User Data</h2>
       <div className="container mt-1" style={{ "overflow": "auto" }}>
         <table className="table table-striped table-hover w-100 text-center">
           <thead>
@@ -144,6 +151,7 @@ const Allusers = () => {
               <th scope="col">Last Name</th>
               <th scope="col">Email</th>
               <th scope="col">User Type</th>
+              <th scope="col">Status</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -160,8 +168,13 @@ const Allusers = () => {
                     {/* <td>{d.user_id}</td> */}
                     {
                       d.user_type === 'ADMIN' ?
-                        <td>Admin</td> :
-                        <td>User</td>
+                      <td>Admin</td> :
+                      <td>User</td>
+                    }
+                    {
+                      d.is_activated == '1' ?
+                      <td>Activated</td> :
+                      <td>Deactivated</td>
                     }
                     <td className='column-8'>
                       <button className='btn btn-info  mx-1 my-1' value={[d._id + key]} defaultValue={d._id} data-bs-toggle="modal" data-bs-target={`#view${key + 1}`} onClick={handleView}>View</button>
@@ -203,6 +216,22 @@ const Allusers = () => {
                                   }
                                 </select>
                               </div>
+
+                              <div className="input-group mb-3">
+                                <label className="input-group-text" htmlFor="usertype">State</label>
+                                <select className="form-select" id="isactivated" onChange={handleisActive}>
+                                  {d.is_activated == 1 ? <>
+                                    <option value={1}>Activated</option>
+                                    <option value={0}>Deactivated</option>
+                                  </> :
+                                    <>
+                                      <option value={0}>Deactivated</option>
+                                      <option value={1}>Activated</option>
+                                    </>
+                                  }
+                                </select>
+                              </div>
+
 
                             </div>
                             <div className="modal-footer">

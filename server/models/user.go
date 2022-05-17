@@ -25,13 +25,12 @@ type User struct {
 }
 
 type UpdateUser struct {
-	First_name *string `json:"first_name"`
-	Last_Name  *string `json:"last_name"`
-	// Password   *string   `json:"password"`
-	// Pass       string    `json:"pass"`
-	Email      *string   `json:"email"`
-	Updated_at time.Time `json:"updated_at"`
-	User_type  *string   `json:"user_type"`
+	First_name   *string   `json:"first_name"`
+	Last_Name    *string   `json:"last_name"`
+	Email        *string   `json:"email"`
+	Updated_at   time.Time `json:"updated_at"`
+	User_type    *string   `json:"user_type"`
+	Is_activated int       `json:"isactivated"`
 }
 
 type ViewUsers struct {
