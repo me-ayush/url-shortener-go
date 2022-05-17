@@ -2,7 +2,7 @@ package routes
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"log"
 	"time"
 	"url-shortener/controllers"
@@ -135,6 +135,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 	}
 	x := "USER"
 	user.User_type = &x
+	user.Is_activated = 1
 	msg, resp, err := controllers.UpdateUser(userId, user)
 
 	if err != nil {
@@ -144,7 +145,6 @@ func UpdateProfile(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Document Not Found"})
 	}
 
-	fmt.Println(msg, resp, err)
 	return c.Status(fiber.StatusOK).JSON(msg)
 }
 
@@ -176,4 +176,45 @@ func UserLinks(c *fiber.Ctx) error {
 	// fmt.Println(links)
 
 	return c.Status(fiber.StatusOK).JSON(links)
+}
+
+func UpdateUser(c *fiber.Ctx) error {
+	userId := c.Get("user_id")
+
+	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	updateType := c.Get("update_type")
+
+	err := errors.New("")
+	if updateType == "password" {
+		err = changePassUser(c)
+	}
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON("Passoword Changed")
+}
+
+func changePassUser(c *fiber.Ctx) error {
+	userId := c.Get("user_id")
+
+	if err := helpers.MatchuserTypeToUid(c, userId); err != nil {
+		return err
+	}
+
+	user_body := new(models.SelfUpdateUser)
+
+	if err := c.BodyParser(&user_body); err != nil {
+		return errors.New("cannot parse json")
+	}
+
+	err := controllers.ChangeUserPass(userId, *user_body)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }

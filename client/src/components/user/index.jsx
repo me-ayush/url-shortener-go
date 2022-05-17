@@ -9,6 +9,7 @@ const ProfileIndex = () => {
         const token = JSON.parse(localStorage.getItem('token'))
         const user_id = JSON.parse(localStorage.getItem("id"))
         if (!token || !user_id) {
+            localStorage.clear()
             swal("Wrong Credentials", "", "error");
             nav("/signin")
         }

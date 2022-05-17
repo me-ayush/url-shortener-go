@@ -112,7 +112,7 @@ const Myurl = () => {
 			<div id="user-table">
 				<div className="container mt-5 p-0">
 
-					{links &&
+					{data &&
 						<form className='mt-2'>
 							<div className='row'>
 								<div className="col-sm-12 col-md-2 mb-2">

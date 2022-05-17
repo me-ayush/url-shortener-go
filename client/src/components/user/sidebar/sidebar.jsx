@@ -12,6 +12,11 @@ const SidebarUser = () => {
             swal("Wrong Credentials", "", "error");
             nav("/signin")
         }
+
+        if(window.innerWidth<950){
+            document.getElementById('sidebar').classList.add("active")
+        }
+
     })
     try{
         var name = localStorage.getItem("user")

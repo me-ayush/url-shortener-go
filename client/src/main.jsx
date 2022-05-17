@@ -9,7 +9,7 @@ ReactDOM.render(
   <CookiesProvider>
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
   
   </CookiesProvider>,
   document.getElementById('root')

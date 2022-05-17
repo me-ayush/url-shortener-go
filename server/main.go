@@ -18,6 +18,7 @@ func setupRoutes(app *fiber.App) {
 
 	private := app.Group("/user")
 	private.Use(middleware.AuthUser)
+	private.Post("/update", routes.UpdateUser)
 	private.Get("/:user_id", routes.UserDetails)
 	private.Get("/mylinks/:user_id", routes.UserLinks)
 	private.Post("/:user_id/updateprofile", routes.UpdateProfile)

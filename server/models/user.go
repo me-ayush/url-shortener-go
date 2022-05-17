@@ -33,6 +33,12 @@ type UpdateUser struct {
 	Is_activated int       `json:"isactivated"`
 }
 
+type SelfUpdateUser struct {
+	User_id  string  `json:"user_id"`
+	Old_pass *string `json:"old_pass"`
+	New_pass *string `json:"new_pass"`
+}
+
 type ViewUsers struct {
 	Ip    string        `json:"ip,omitempty"`
 	Quota string        `json:"quota,omitempty"`

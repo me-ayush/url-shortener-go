@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 import Logo from './img.svg'
 import swal from 'sweetalert';
-
 import { useCookies } from 'react-cookie';
 
 
