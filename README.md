@@ -7,11 +7,13 @@
   For Client (React): 
   
     cd client
+    npm i
     npm run dev
 
   For Server Side:
   
     cd server
+    go mod tidy
     go run main.go
 
 ➔ The user may upload their own personalised shorts.
