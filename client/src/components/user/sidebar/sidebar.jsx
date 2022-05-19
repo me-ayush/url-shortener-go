@@ -49,15 +49,6 @@ const SidebarUser = () => {
                             <Link to="/profile/settings"><span className="fa fa-cogs mr-3"></span> Account Setting</Link>
                         </li>
                         <li>
-                            <a href="#"><span className="fa fa-briefcase mr-3"></span> Works</a>
-                        </li>
-                        <li>
-                            <a href="#"><span className="fa fa-sticky-note mr-3"></span> Blog</a>
-                        </li>
-                        <li>
-                            <a href="#"><span className="fa fa-suitcase mr-3"></span> Gallery</a>
-                        </li>
-                        <li>
                             <Link to="/"><span className="fa fa-backward mr-3"></span> Home Page</Link>
                         </li>
                     </ul>

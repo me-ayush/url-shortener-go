@@ -47,6 +47,7 @@ const Myurl = () => {
 				if (res.status !== 200 || !data) {
 					swal(data.error, "", "error");
 					localStorage.clear();
+					nav("/signin")
 				} else {
 					setLinks(data)
 					setFilteredData(data)
