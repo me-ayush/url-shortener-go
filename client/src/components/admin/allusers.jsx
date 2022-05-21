@@ -1,60 +1,52 @@
-import React, { useEffect, useState } from 'react'
-import Loader from '../loader/loader';
-import { useNavigate, Link } from 'react-router-dom'
-import Header from '../navbar'
-import { handleSearch, sortData } from './helpers';
+import React, { useEffect, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import swal from 'sweetalert';
 
-
+import { handleSearch, sortData } from './helpers';
+import { UserContext } from '../../UserContext';
+import Loader from '../loader/loader';
+import Header from '../navbar'
 
 const Allusers = () => {
   let navigate = useNavigate()
+  const userContext = useContext(UserContext)
   const [isloading, setLoading] = useState(false)
   const [data, setdata] = useState(false)
   const [updateuser, setUpdateuser] = useState()
-  const [cookies, setCookies] = useCookies(['user']);
-
 
   const [filteredData, setFilteredData] = useState(data);
   const [searchField, setSearchField] = useState("");
   const [sortedField, setSortedField] = useState();
   const [sortBy, setSortBy] = useState(0);
 
-  const token = JSON.parse(localStorage.getItem('token'))
-  const user_id = JSON.parse(localStorage.getItem("id"))
-  const user = JSON.parse(localStorage.getItem("user"))
+  const token = userContext.token[0]
+  const user_id = userContext.id[0]
 
   const getUsers = async () => {
-    if (!token || !user_id || !user && cookies._jwt) {
-      swal("Login First", "", "error").then(() => {
-        navigate("/signin")
-      });
-    } else {
-      setLoading(true)
-      try {
-        const res = await fetch('/admin/users', {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "token": token,
-            "id": user_id
-          }
-        });
-        setLoading(false)
-        const data = await res.json();
-        if (res.status !== 200 || !data) {
-          localStorage.clear()
-          navigate("/")
-        } else {
-          setdata(data)
-          setFilteredData(data)
+    setLoading(true)
+    try {
+      const res = await fetch('/admin/users', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "token": token,
+          "id": user_id
         }
-      } catch (err) {
-        swal(err, "", "error");
-        setLoading(false)
+      });
+      setLoading(false)
+      const data = await res.json();
+      if (res.status !== 200 || !data) {
+        localStorage.clear()
+        navigate("/")
+      } else {
+        setdata(data)
+        setFilteredData(data)
       }
+    } catch (err) {
+      swal(err, "", "error");
+      setLoading(false)
     }
   }
 
@@ -92,7 +84,7 @@ const Allusers = () => {
 
   const handleSave = async (e) => {
     setLoading(true)
-    const res = await fetch(`admin/users/${e.target.value}`, {
+    const res = await fetch(`/admin/users/${e.target.value}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -146,7 +138,7 @@ const Allusers = () => {
 
   const handleChange = (e) => {
     let x = handleSearch(e, searchField, data)
-    if(x != undefined){
+    if (x != undefined) {
       setFilteredData(x)
     }
   }

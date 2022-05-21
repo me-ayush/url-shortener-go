@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+
+import { UserContext } from '../../UserContext';
 import Loader from '../loader/loader'
 
 const ProfileSettings = () => {
   const [pass, setPass] = useState({})
+  const userContext = useContext(UserContext)
 
   const [isloading, setLoading] = useState(false)
-  const token = JSON.parse(localStorage.getItem("token"))
-  const userid = JSON.parse(localStorage.getItem("id"))
+  const token = userContext.token[0]
+  const userid = userContext.id[0]
 
   const changeOldPass = (e) => {
     setPass(prev => ({...prev, old_pass: e.target.value}))

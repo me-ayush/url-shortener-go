@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
-import Header from '../navbar'
-import Loader from '../loader/loader'
+import React, { useState, useContext } from 'react'
 import swal from 'sweetalert';
+
+import { UserContext } from '../../UserContext';
+import Loader from '../loader/loader'
+import Header from '../navbar'
 import './css/home.scss'
 
 
 const Home = () => {
+  const userContext = useContext(UserContext)
   const [isloading, setLoading] = useState(false)
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
@@ -13,8 +16,8 @@ const Home = () => {
 
   var token = ''
   var user_id = ''
-  token = JSON.parse(localStorage.getItem('token'))
-  user_id = JSON.parse(localStorage.getItem("id"))
+  token = userContext.token[0]
+  user_id = userContext.id[0]
 
   const handleAdd = async (e) => {
     e.preventDefault()

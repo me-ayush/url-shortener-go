@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react'
+import { useNavigate, Link } from 'react-router-dom';
+
+import { UserContext } from '../../../UserContext';
 import './style.scss'
 
 const SidebarUser = () => {
     const nav = useNavigate()
-    const token = JSON.parse(localStorage.getItem('token'))
-    const user_id = JSON.parse(localStorage.getItem("id"))
+    const userContext = useContext(UserContext)
+    const token = userContext.token[0]
+    const user_id = userContext.id[0]
+    const name = userContext.name[0]
+    const email = userContext.email[0]
+
     useEffect(() => {
         if (!token || !user_id) {
             swal("Wrong Credentials", "", "error");
@@ -18,13 +23,7 @@ const SidebarUser = () => {
         }
 
     })
-    try{
-        var name = localStorage.getItem("user")
-        name = name.slice(1, name.length - 1)
-        var email = localStorage.getItem("email")
-        email = email.slice(1, email.length - 1)
-    }
-    catch{}
+
     const toggleMenu = (e) => {
         e.preventDefault();
         document.getElementById('sidebar').classList.toggle("active")

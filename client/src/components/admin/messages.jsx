@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { handleSearch, sortData } from './helpers';
-import { useNavigate, Link } from 'react-router-dom'
-import Loader from '../loader/loader';
-import Header from '../navbar'
+import React, { useEffect, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
 import swal from 'sweetalert';
+
+import { handleSearch, sortData } from './helpers';
+import { UserContext } from '../../UserContext';
+import Loader from '../loader/loader';
+import Header from '../navbar'
 
 export const Message = () => {
 
   let navigate = useNavigate()
+  const userContext = useContext(UserContext)
   const [isloading, setLoading] = useState(false)
   const [data, setdata] = useState(false)
   const [messages, setMessages] = useState(false)
@@ -19,41 +22,33 @@ export const Message = () => {
   const [sortedField, setSortedField] = useState();
   const [sortBy, setSortBy] = useState(0);
 
-  const token = JSON.parse(localStorage.getItem('token'))
-  const user_id = JSON.parse(localStorage.getItem("id"))
-  const user = JSON.parse(localStorage.getItem("user"))
+  const token = userContext.token[0]
+  const user_id = userContext.id[0]
 
   const getMessages = async () => {
-
-    if (!token || !user_id || !user && cookies._jwt) {
-      swal("Please Login", "", "error");
-      navigate("/signin")
-    } else {
-      try {
-        setLoading(true)
-        const res = await fetch('/admin/message', {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "token": token,
-            "id": user_id
-          }
-        });
-        const data = await res.json();
-        setLoading(false)
-        if (res.status !== 200 || !data) {
-          swal(data.error, "", "error");
-        } else {
-          setMessages(data)
-          setFilteredData(data)
-          console.log(data)
-          setdata(false)
+    try {
+      setLoading(true)
+      const res = await fetch('/admin/message', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "token": token,
+          "id": user_id
         }
-      } catch (err) {
-        setLoading(false)
-        setdata(true)
+      });
+      const data = await res.json();
+      setLoading(false)
+      if (res.status !== 200 || !data) {
+        swal(data.error, "", "error");
+      } else {
+        setMessages(data)
+        setFilteredData(data)
+        setdata(false)
       }
+    } catch (err) {
+      setLoading(false)
+      setdata(true)
     }
   }
 
@@ -89,7 +84,7 @@ export const Message = () => {
 
   const handleChange = (e) => {
     let x = handleSearch(e, searchField, messages)
-    if(x != undefined){
+    if (x != undefined) {
       setFilteredData(x)
     }
   }

@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { useCookies } from 'react-cookie';
+import { useNavigate, Link } from 'react-router-dom'
+import swal from 'sweetalert';
+
+import { UserContext } from '../../UserContext';
 import Header from '../navbar/index'
 import Loader from '../loader/loader';
-import { useNavigate } from 'react-router-dom'
-import { Link } from "react-router-dom";
 import Logo from './img.svg'
-import swal from 'sweetalert';
-import { useCookies } from 'react-cookie';
+
 
 
 const Login = () => {
+    const userContext = useContext(UserContext)
     const [isloading, setLoading] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -65,17 +68,31 @@ const Login = () => {
                       }
                   });
             }else{
-                swal("Login Error", data.error, "error");
+            swal("Login Error", data.error, "error");
             }
         } else {
+            let x = JSON.stringify(data.user_id)
+            userContext.id[1](x.slice(1, x.length - 1))
+
+            x = JSON.stringify(data.first_name + ' ' + data.last_name)
+            userContext.name[1](x.slice(1, x.length - 1))
+            
+            x = JSON.stringify(data.email)
+            userContext.email[1](x.slice(1, x.length - 1))
+            
+            x = JSON.stringify(data.token)
+            userContext.token[1](x.slice(1, x.length - 1))
+            
             localStorage.setItem('user', JSON.stringify(data.first_name + ' ' + data.last_name))
             localStorage.setItem('id', JSON.stringify(data.user_id))
             localStorage.setItem('email', JSON.stringify(data.email))
             localStorage.setItem('token', JSON.stringify(data.token))
-
+            
             if(data.user_type==="ADMIN"){
+                userContext.isAdmin[1](true)
                 setCookie('_jwt', Math.floor((Math.random() * 1000000) + 1), { path: '/' });
             }else{
+                userContext.isAdmin[1](false)
                 removeCookie('_jwt')
             }
 

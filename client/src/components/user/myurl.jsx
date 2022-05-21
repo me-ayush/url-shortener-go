@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
+import swal from 'sweetalert';
+
+import { handleSearch, sortData } from '../admin/helpers';
+import { UserContext } from '../../UserContext';
 import Loader from '../loader/loader';
 import Header from '../navbar'
 import './table.scss'
-import swal from 'sweetalert';
-import { handleSearch, sortData } from '../admin/helpers';
 
 
 const Myurl = () => {
 	const nav = useNavigate()
+    const userContext = useContext(UserContext)
 	const [isloading, setLoading] = useState(false)
 	const [links, setLinks] = useState([])
 	const [data, setData] = useState(false)
@@ -18,8 +21,8 @@ const Myurl = () => {
 	const [sortedField, setSortedField] = useState();
 	const [sortBy, setSortBy] = useState(0);
 
-	const token = JSON.parse(localStorage.getItem('token'))
-	const user_id = JSON.parse(localStorage.getItem("id"))
+	const token = userContext.token[0]
+	const user_id = userContext.id[0]
 
 	const getMinute = (millis) => {
 		var minutes = Math.floor(millis / 60000);

@@ -1,68 +1,62 @@
-import React, { useEffect, useState } from 'react'
-import { handleSearch, sortData } from './helpers';
+import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import swal from 'sweetalert';
+
+import { handleSearch, sortData } from './helpers';
+import { UserContext } from '../../UserContext';
 import Loader from '../loader/loader';
 import Header from '../navbar'
-import { useCookies } from 'react-cookie';
-import swal from 'sweetalert';
-// import '../user/table.scss'
 
 
 const Alllinks = () => {
     let navigate = useNavigate()
+    const userContext = useContext(UserContext)
     const [links, setLinks] = useState(false)
     const [isloading, setLoading] = useState(false)
-    const [cookies, setCookies] = useCookies(['user']);
     const [filteredData, setFilteredData] = useState(links);
     const [searchField, setSearchField] = useState("");
     const [rowPerPage, setRowPerPage] = useState(10);
     const [sortedField, setSortedField] = useState();
     const [sortBy, setSortBy] = useState(0);
 
-    const token = JSON.parse(localStorage.getItem('token'))
-    const user_id = JSON.parse(localStorage.getItem("id"))
-    const user = JSON.parse(localStorage.getItem("user"))
+    const token = userContext.token[0]
+    const user_id = userContext.id[0]
 
-    const getUsers = async () => {
-        if (!token || !user_id || !user && cookies._jwt != "") {
-            swal("Please Login", "", "error");
-            navigate("/signin")
-        } else {
-            try {
-                setLoading(true)
-                const res = await fetch('/admin/links', {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                        "token": token,
-                        "id": user_id
-                    }
-                });
-                setLoading(false)
-                const data = await res.json();
-                if (res.status !== 200 || !data) {
-                    swal(data.error, "", "error");
-                    localStorage.clear()
-                    navigate("/")
-                } else {
-                    setLinks(data)
-                    setFilteredData(data)
+    const getLinks = async () => {
+        try {
+            setLoading(true)
+            const res = await fetch('/admin/links', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "token": token,
+                    "id": user_id
                 }
-            } catch (err) {
-                setLoading(false)
+            });
+            setLoading(false)
+            const data = await res.json();
+            if (res.status !== 200 || !data) {
+                swal(data.error, "", "error");
+                localStorage.clear()
+                navigate("/")
+            } else {
+                setLinks(data)
+                setFilteredData(data)
             }
+        } catch (err) {
+            setLoading(false)
         }
     }
 
     useEffect(() => {
-        getUsers()
+        getLinks()
     }, [])
 
 
     const handleDelete = async (e) => {
         setLoading(true)
-        const res = await fetch(`admin/links/${e.target.value}`, {
+        const res = await fetch(`/admin/links/${e.target.value}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -76,15 +70,15 @@ const Alllinks = () => {
         if (res.status != 200 || !data) {
             swal(data.error, "", "error");
         } else {
-            swal("Link Deleted", "", "success").then(() => { getUsers() });
+            swal("Link Deleted", "", "success").then(() => { getLinks() });
         }
     }
 
     const handleChange = (e) => {
-        
+
         let x = handleSearch(e, searchField, links)
-        if(x != undefined){
-        setFilteredData(x)
+        if (x != undefined) {
+            setFilteredData(x)
         }
         // try {
         //     let value = e.target.value.toLowerCase();
@@ -99,9 +93,9 @@ const Alllinks = () => {
 
     const handelSorting = (field) => {
         setLoading(true)
-        if(field == sortedField){
+        if (field == sortedField) {
             setSortBy(sortBy => !sortBy)
-        }else{
+        } else {
             setSortBy(1)
         }
         setSortedField(field)

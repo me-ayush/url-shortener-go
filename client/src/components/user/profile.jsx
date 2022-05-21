@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import Loader from '../loader/loader';
-import Header from '../navbar'
-import { useNavigate, Link } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import swal from 'sweetalert';
-import SidebarUser from './sidebar/sidebar';
+
+import { UserContext } from '../../UserContext';
+import Loader from '../loader/loader';
 
 
 const Profile = () => {
   const nav = useNavigate()
+  const userContext = useContext(UserContext)
   const [isloading, setLoading] = useState(false)
   const [detail, setDetail] = useState({
     first: "",
@@ -15,11 +16,9 @@ const Profile = () => {
     last: "",
     type: "",
   })
-  
 
-  const token = JSON.parse(localStorage.getItem('token'))
-  const user_id = JSON.parse(localStorage.getItem("id"))
-  const user = JSON.parse(localStorage.getItem("user"))
+  const token = userContext.token[0]
+  const user_id = userContext.id[0]
 
   const handleFirstName = (e) => {
     setDetail(prevState => {
@@ -53,6 +52,7 @@ const Profile = () => {
       })
     })
     setLoading(false)
+    userContext.name[1](detail.first + ' ' + detail.last)
     const data = await res.json()
     if (res.status != 200 || !data) {
       swal(data.msg, "", "error");
@@ -96,13 +96,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    if (!token || !user_id || !user || token == '' || user_id == '' || user == '') {
-      localStorage.clear()
-      swal("Wrong Credentials", "", "error");
-      nav("/signin")
-    } else {
       check_auth()
-    }
   }, [])
 
 

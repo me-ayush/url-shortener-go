@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { Navbar, Nav } from 'react-bootstrap'
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useContext } from 'react'
+import { Link, useNavigate} from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import { UserContext } from '../../UserContext';
 
 const Header = () => {
+    const userContext = useContext(UserContext)
     const [user, setUser] = useState('No User')
     const nav = useNavigate()
     const [cookies, setCookies] = useCookies(['user']);
 
-    useEffect(() => {
-        if (localStorage.getItem("user")) {
-            let x = localStorage.getItem("user")
-            x = x.slice(1, x.length - 1)
-            setUser(x)
-        }
-    }, [])
-
-
     const handleLogout = function () {
         localStorage.clear()
+        userContext.id[1](null)
+        userContext.name[1](null)
+        userContext.email[1](null)
+        userContext.token[1](null)
+        userContext.isAdmin[1](null)
         nav('/')
     }
 
@@ -42,7 +38,7 @@ const Header = () => {
                             <li className="nav-item">
                                 <Link className="nav-link active" aria-current="page" to="/connect">Contact Me</Link>
                             </li>
-                            {localStorage.getItem("token") ?
+                            {userContext.token[0] ?
                                 <>
                                     {/* <li className="nav-item">
                                         <Link className="nav-link active" to="/addurl">Add URL</Link>
@@ -52,15 +48,15 @@ const Header = () => {
                                     </li>
 
 
-                                    {cookies._jwt ? <>
+                                    {userContext.isAdmin[0] ? <>
                                         <li className="nav-item">
-                                            <Link className="nav-link active" to="/allusers">All Users</Link>
+                                            <Link className="nav-link active" to="/Admin/allusers">All Users</Link>
                                         </li>
                                         <li className="nav-item">
-                                            <Link className="nav-link active" to="/alllinks">All Links</Link>
+                                            <Link className="nav-link active" to="/Admin/alllinks">All Links</Link>
                                         </li>
                                         <li className="nav-item">
-                                            <Link className="nav-link active" to="/messages">All Messages</Link>
+                                            <Link className="nav-link active" to="/Admin/messages">All Messages</Link>
                                         </li>
                                     </> : null}
 
@@ -69,12 +65,12 @@ const Header = () => {
                             }
 
                         </ul>
-                        {localStorage.getItem("token") ?
+                        {userContext.token[0] ?
                             <>
                                 <ul className="navbar-nav">
                                     <li className="nav-item dropdown text-right active">
                                         <a className="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {user && user}
+                                            {userContext.name[0] ? userContext.name[0] : user}
                                         </a>
                                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                             <li> <Link className="dropdown-item" to="/profile">Profile</Link></li>
