@@ -6,7 +6,6 @@ import Loader from '../loader/loader'
 import Header from '../navbar'
 import './css/home.scss'
 
-
 const Home = () => {
   const userContext = useContext(UserContext)
   const [isloading, setLoading] = useState(false)
@@ -26,7 +25,9 @@ const Home = () => {
     const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
 
     if (!regex.test(url)) {
-      swal("Invalid URL", "", "error");
+      swal("Invalid URL", "", "error").then(()=>{
+        toastSuccess("ok");
+      });
       return
     }
 
@@ -45,6 +46,11 @@ const Home = () => {
         })
       });
     } else {
+      if (days <= 0 || isNaN(days)) {
+        swal("Invalid Expirys Days", "", "warning");
+        setLoading(false)
+        return
+      }
       res = await fetch(`/user/${user_id}/add`, {
         method: "POST",
         headers: {
@@ -64,7 +70,21 @@ const Home = () => {
       swal(data.error, "", "error").then(() => {
       });
     } else {
-      swal("Short Added", `Link: ${domain + data.short}`, "success");
+      let link = domain + data.short
+      // swal("Short Added", `Link: ${domain + data.short}`, "success");
+      swal({
+        title: "Link Added",
+        text: `Link: ${domain + data.short}`,
+        icon: "success",
+        button: "Copy Link",
+      }).then(() => {
+        const text = document.createElement('textarea')
+        text.value = link
+        document.body.appendChild(text)
+        text.select()
+        document.execCommand('copy')
+        document.body.removeChild(text)
+      });
     }
     setLoading(false)
   }
@@ -109,7 +129,7 @@ const Home = () => {
                           <div className=" col-sm-12 col-md-6">
                             <div className="form-group last mb-4">
                               <div className="form-floating mb-3">
-                                <input type="text" className="form-control" id="custom" placeholder="Custom Short (Optional)" onChange={(e) => { setDays(Number(e.target.value)) }} />
+                                <input type="text" className="form-control" id="custom" placeholder="Valid Upto (In Days)" onChange={(e) => { setDays(Number(e.target.value)) }} />
                                 <label htmlFor="custom">Valid Upto (In Days)</label>
                               </div>
                             </div>
