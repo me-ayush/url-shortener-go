@@ -12,6 +12,7 @@ const Home = () => {
   const [isloading, setLoading] = useState(false)
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
+  const [days, setDays] = useState(10)
   const domain = import.meta.env.VITE_DOMAIN
 
   var token = ''
@@ -53,6 +54,7 @@ const Home = () => {
         body: JSON.stringify({
           "url": url,
           "short": custom,
+          "days": days
         })
       });
     }
@@ -102,6 +104,18 @@ const Home = () => {
                             </div>
                           </div>
                         </div>
+
+                        {userContext.name[0] &&
+                          <div className=" col-sm-12 col-md-6">
+                            <div className="form-group last mb-4">
+                              <div className="form-floating mb-3">
+                                <input type="text" className="form-control" id="custom" placeholder="Custom Short (Optional)" onChange={(e) => { setDays(Number(e.target.value)) }} />
+                                <label htmlFor="custom">Valid Upto (In Days)</label>
+                              </div>
+                            </div>
+                          </div>
+                        }
+
                         <div className="col">
                           <button className='btn btn-success mb-3 p-3 w-100'>Add This URL</button>
                         </div>
