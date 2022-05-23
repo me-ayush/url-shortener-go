@@ -15,6 +15,49 @@ const Contact = () => {
 
   const handleContact = async (e) => {
     e.preventDefault()
+    let f = 0
+
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      document.getElementById('Email').classList.remove('is-invalid')
+      document.getElementById('Email').classList.add('is-valid')
+    } else {
+      document.getElementById('Email').classList.add('is-invalid')
+      document.getElementById('Email').classList.remove('is-valid')
+      f = 1
+    }
+
+    if (name == '') {
+      document.getElementById('Name').classList.add('is-invalid')
+      document.getElementById('Name').classList.remove('is-valid')
+      f = 1
+    } else {
+      document.getElementById('Name').classList.remove('is-invalid')
+      document.getElementById('Name').classList.add('is-valid')
+    }
+
+    if (subject == '') {
+      document.getElementById('Subject').classList.add('is-invalid')
+      document.getElementById('Subject').classList.remove('is-valid')
+      f = 1
+    } else {
+      document.getElementById('Subject').classList.remove('is-invalid')
+      document.getElementById('Subject').classList.add('is-valid')
+    }
+    
+    if (message == '') {
+      document.getElementById('Message').classList.add('is-invalid')
+      document.getElementById('Message').classList.remove('is-valid')
+      f = 1
+    } else {
+      document.getElementById('Message').classList.remove('is-invalid')
+      document.getElementById('Message').classList.add('is-valid')
+    }
+
+    if (f == 1) {
+      return
+    }
+
+
     setLoading(true)
     const res = await fetch('/contact', {
       method: "POST",
@@ -62,6 +105,9 @@ const Contact = () => {
                                 <div className="form-floating mb-3">
                                   <input type="text" className="form-control " id="Name" placeholder="Name" onChange={(e) => { setName(e.target.value) }} />
                                   <label htmlFor="Name">Name</label>
+                                  <div className="invalid-feedback">
+                                    Please Enter Name.
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -70,6 +116,9 @@ const Contact = () => {
                                 <div className="form-floating mb-3">
                                   <input type="text" className="form-control " id="Email" placeholder="name@example.com" onChange={(e) => { setEmail(e.target.value) }} />
                                   <label htmlFor="Email">Email</label>
+                                  <div className="invalid-feedback">
+                                    Please Enter Correct Email.
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -78,6 +127,9 @@ const Contact = () => {
                                 <div className="form-floating mb-3">
                                   <input type="text" className="form-control " id="Subject" placeholder="name@example.com" onChange={(e) => { setSubject(e.target.value) }} />
                                   <label htmlFor="Subject">Subject</label>
+                                  <div className="invalid-feedback">
+                                    Please Enter Subject.
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -86,6 +138,9 @@ const Contact = () => {
                                 <div className="form-floating mb-3">
                                   <textarea name="message" className="form-control" id="Message" cols={30} rows={7} placeholder="Message" onChange={(e) => { setMessage(e.target.value) }}></textarea>
                                   <label htmlFor="Message">Message</label>
+                                  <div className="invalid-feedback">
+                                    Please Enter Some Message.
+                                  </div>
                                 </div>
                               </div>
                             </div>
