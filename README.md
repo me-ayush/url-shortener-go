@@ -18,7 +18,7 @@
 
 ➔ The user may upload their own personalised shorts.
 
-➔ An anonymous user can only add urls which are valid upto 1 day only, but a registered user can see, edit, add, and remove urls.
+➔ An anonymous user can only add urls which are valid upto 1 day only, but a registered user can see, edit, add, and remove urls also user can set Expiry Time.
 
 ➔ TECH STACK : Golang, React.js, MongoDB
 
