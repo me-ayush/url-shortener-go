@@ -139,9 +139,16 @@ const Home = () => {
                             <div className=" col-sm-12 col-md-6">
                               <div className="form-group last mb-4">
                                 <div className="form-floating mb-3">
-                                  {/* <input type="text" className="form-control" id="custom" placeholder="Valid Upto (In Days)" onChange={(e) => { setDays(Number(e.target.value)) }} /> */}
                                   <input type="datetime-local" className="form-control" id="custom-time" placeholder="Set Time (Optional)"  />
                                   <label htmlFor="custom">Set Time (Optional)</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div className=" col-sm-12 col-md-6">
+                              <div className="form-group last mb-4">
+                                <div className="form-floating mb-3">
+                                  <input type="datetime-local" className="form-control" id="custom-activation" placeholder="Link Activation Time (Optional)"  />
+                                  <label htmlFor="custom">Link Activation Time (Optional)</label>
                                 </div>
                               </div>
                             </div>
