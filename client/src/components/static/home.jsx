@@ -12,6 +12,9 @@ const Home = () => {
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
   const [days, setDays] = useState(10)
+  const [activationTime, setActivationTime] = useState('')
+  const [expirationTime, setExpirationTime] = useState('')
+  const [linkDet, setLinkDet] = useState('')
   const domain = import.meta.env.VITE_DOMAIN
 
   var token = ''
@@ -19,15 +22,66 @@ const Home = () => {
   token = userContext.token[0]
   user_id = userContext.id[0]
 
+
+  const setLinkDetails = (e, v) =>{
+    if(v == setDays){
+      v(Number(e.target.value))
+    }else{
+      v(e.target.value)
+    }
+
+    var activatedFrom = ''
+    var expiredAt = ''
+    var date_format = {month:'short', year:'numeric', day:"numeric", hour: '2-digit', minute: '2-digit'}
+
+    if (activationTime != ''){
+      activatedFrom = activationTime.split('T')[0] + ' ' + activationTime.split('T')[1]
+      if(v == setActivationTime){
+        activatedFrom = e.target.value.split('T')[0] + ' ' + e.target.value.split('T')[1]
+      }
+      activatedFrom = new Date(activatedFrom).toLocaleTimeString('en-us', date_format)
+    }else{
+      activatedFrom = new Date().toLocaleTimeString('en-us', date_format)
+    }
+    
+    if (expirationTime != ''){
+      // expiredAt = new Date()
+      // console.log(expiredAt)
+      // expiredAt = new Date(expiredAt).toLocaleTimeString('en-us', date_format)
+      var now = new Date(activatedFrom);
+      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+      var dayInMs = 86400000 * days;
+      if(v == setDays){
+        dayInMs = 86400000 * e.target.value;
+      }
+      const tomorrow = new Date(today.getTime() + dayInMs);  
+      expiredAt = new Date(tomorrow).toLocaleTimeString('en-us', date_format)
+    }else{
+      var now = new Date(activatedFrom);
+      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+      var dayInMs = 86400000 * days;
+      if(v == setDays){
+        dayInMs = 86400000 * e.target.value;
+      }
+      const tomorrow = new Date(today.getTime() + dayInMs);  
+      expiredAt = new Date(tomorrow).toLocaleTimeString('en-us', date_format)
+    }
+
+    let x = 'Link Will Activated From ' + activatedFrom + ' => ' + expiredAt
+
+
+    setLinkDet(x)
+  }
+
   const handleAdd = async (e) => {
     e.preventDefault()
+    console.log(days)
+    // return
 
     const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
 
     if (!regex.test(url)) {
-      swal("Invalid URL", "", "error").then(() => {
-        toastSuccess("ok");
-      });
+      swal("Invalid URL", "", "error")
       return
     }
 
@@ -130,7 +184,7 @@ const Home = () => {
                             <div className=" col-sm-12 col-md-6">
                               <div className="form-group last mb-4">
                                 <div className="form-floating mb-3">
-                                  <input type="text" className="form-control" id="custom" placeholder="Valid Upto (In Days)" onChange={(e) => { setDays(Number(e.target.value)) }} />
+                                  <input type="text" className="form-control" id="custom" placeholder="Valid Upto (In Days)" onChange={(e) => { setLinkDetails(e, setDays) }} />
                                   {/* <input type="datetime-local" className="form-control" id="custom" placeholder="Valid Upto (In Days)" onChange={(e) => { setDays(Number(e.target.value)) }} /> */}
                                   <label htmlFor="custom">Valid Upto (In Days)</label>
                                 </div>
@@ -139,20 +193,31 @@ const Home = () => {
                             <div className=" col-sm-12 col-md-6">
                               <div className="form-group last mb-4">
                                 <div className="form-floating mb-3">
-                                  <input type="datetime-local" className="form-control" id="custom-time" placeholder="Set Time (Optional)"  />
-                                  <label htmlFor="custom">Set Time (Optional)</label>
+                                  <input type="time" className="form-control" id="custom-time" placeholder="Expiration Time (Optional)" onChange={(e) => { setLinkDetails(e, setExpirationTime) }} />
+                                  <label htmlFor="custom">Expiration Time (Optional)</label>
                                 </div>
                               </div>
                             </div>
                             <div className=" col-sm-12 col-md-6">
                               <div className="form-group last mb-4">
                                 <div className="form-floating mb-3">
-                                  <input type="datetime-local" className="form-control" id="custom-activation" placeholder="Link Activation Time (Optional)"  />
-                                  <label htmlFor="custom">Link Activation Time (Optional)</label>
+                                  <input type="datetime-local" className="form-control" id="custom-activation" placeholder="Activation Time (Optional)" onChange={(e) => { setLinkDetails(e, setActivationTime) }} />
+                                  <label htmlFor="custom">Activation Time (Optional)</label>
                                 </div>
                               </div>
                             </div>
+                            
+                            <div className=" col-sm-12 col-md-12">
+                              <div className="form-group last mb-4">
+                                <div className="form-floating mb-3">
+                                  <input type="text" className="form-control disabled" id="" placeholder="Link Details" value={linkDet} disabled />
+                                  <label htmlFor="custom" className='disabled'>Link Details</label>
+                                </div>
+                              </div>
+                            </div>
+
                           </>
+
                         }
 
                         <div className="col">
