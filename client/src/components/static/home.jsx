@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import swal from 'sweetalert';
 
 import { UserContext } from '../../UserContext';
@@ -11,10 +11,14 @@ const Home = () => {
   const [isloading, setLoading] = useState(false)
   const [url, setUrl] = useState('')
   const [custom, setCustom] = useState('')
+
   const [days, setDays] = useState(10)
   const [activationTime, setActivationTime] = useState('')
   const [expirationTime, setExpirationTime] = useState('')
+  const [finalActivationTime, setFinalActivationTime] = useState('')
+  const [finalExpirationTime, setFinalExpirationTime] = useState('')
   const [linkDet, setLinkDet] = useState('')
+
   const domain = import.meta.env.VITE_DOMAIN
 
   var token = ''
@@ -22,61 +26,61 @@ const Home = () => {
   token = userContext.token[0]
   user_id = userContext.id[0]
 
-
-  const setLinkDetails = (e, v) =>{
-    if(v == setDays){
-      v(Number(e.target.value))
-    }else{
-      v(e.target.value)
-    }
-
+  useEffect(() => {
+    setTimes(null, null)
+  }, [])
+  
+  const setTimes = (value, function_name) =>{
     var activatedFrom = ''
     var expiredAt = ''
-    var date_format = {month:'short', year:'numeric', day:"numeric", hour: '2-digit', minute: '2-digit'}
+    var date_format = { month: 'short', year: 'numeric', day: "numeric", hour: '2-digit', minute: '2-digit' }
 
-    if (activationTime != ''){
+    if (activationTime != '') {
       activatedFrom = activationTime.split('T')[0] + ' ' + activationTime.split('T')[1]
-      if(v == setActivationTime){
-        activatedFrom = e.target.value.split('T')[0] + ' ' + e.target.value.split('T')[1]
+      if (function_name == setActivationTime) {
+        activatedFrom = value.split('T')[0] + ' ' + value.split('T')[1]
       }
       activatedFrom = new Date(activatedFrom).toLocaleTimeString('en-us', date_format)
-    }else{
+    } else {
       activatedFrom = new Date().toLocaleTimeString('en-us', date_format)
     }
-    
-    if (expirationTime != ''){
-      // expiredAt = new Date()
-      // console.log(expiredAt)
-      // expiredAt = new Date(expiredAt).toLocaleTimeString('en-us', date_format)
-      var now = new Date(activatedFrom);
-      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-      var dayInMs = 86400000 * days;
-      if(v == setDays){
-        dayInMs = 86400000 * e.target.value;
-      }
-      const tomorrow = new Date(today.getTime() + dayInMs);  
-      expiredAt = new Date(tomorrow).toLocaleTimeString('en-us', date_format)
-    }else{
-      var now = new Date(activatedFrom);
-      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-      var dayInMs = 86400000 * days;
-      if(v == setDays){
-        dayInMs = 86400000 * e.target.value;
-      }
-      const tomorrow = new Date(today.getTime() + dayInMs);  
-      expiredAt = new Date(tomorrow).toLocaleTimeString('en-us', date_format)
+
+    var now = new Date(activatedFrom);
+    if (expirationTime != '') {
+      now.setHours(expirationTime.split(':')[0])
+      now.setMinutes(expirationTime.split(':')[1])
+    } 
+    if(function_name == setExpirationTime) {
+      now.setHours(value.split(':')[0])
+      now.setMinutes(value.split(':')[1])
     }
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+    var dayInMs = 86400000 * days;
+    if (function_name == setDays) {
+      dayInMs = 86400000 * value;
+    }
+    const tomorrow = new Date(today.getTime() + dayInMs);
+    expiredAt = new Date(tomorrow).toLocaleTimeString('en-us', date_format)
+
+    setFinalActivationTime(new Date(activatedFrom).valueOf())
+    setFinalExpirationTime(new Date(expiredAt).valueOf())
 
     let x = 'Link Will Activated From ' + activatedFrom + ' => ' + expiredAt
-
-
     setLinkDet(x)
+
+  }
+
+  const setLinkDetails = (e, v) => {
+    if (v == setDays) {
+      v(Number(e.target.value))
+    } else {
+      v(e.target.value)
+    }
+    setTimes(e.target.value, v)
   }
 
   const handleAdd = async (e) => {
     e.preventDefault()
-    console.log(days)
-    // return
 
     const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
 
@@ -114,7 +118,9 @@ const Home = () => {
         body: JSON.stringify({
           "url": url,
           "short": custom,
-          "days": days
+          "days": days,
+          "activation_from": finalActivationTime,
+          "deactivation_from": finalExpirationTime
         })
       });
     }
@@ -206,7 +212,7 @@ const Home = () => {
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div className=" col-sm-12 col-md-12">
                               <div className="form-group last mb-4">
                                 <div className="form-floating mb-3">

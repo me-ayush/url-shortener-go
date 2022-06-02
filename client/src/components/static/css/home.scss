@@ -1,18 +1,19 @@
 #home {
-    position: absolute;
+    // position: absolute;
     top: 0;
     left: 0;
     z-index: -1;
     height: 100vh;
     width: 100%;
     .banner {
+        height: fit-content;
         background-image: url(./banner-bg.jpg);
         background-size: cover;
         background-repeat: no-repeat;
         height: inherit;
         background-position: center center;
         
-        overflow-y: hidden;
+        // overflow-y: hidden;
     }
 
     .banner .caption h2 {

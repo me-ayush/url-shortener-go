@@ -5,14 +5,15 @@ import (
 )
 
 type Request struct {
-	URL        string    `json:"url"`
-	Short      string    `json:"short"`
-	Addedby    string    `json:"addedby"`
-	User       string    `json:"User"`
-	Clicks     string    `json:"clicks"`
-	Expiry     time.Time `json:"expiry"`
-	ExpiryDays int       `json:"days"`
-	ExpiryAt   string    `json:"expiryat"`
+	URL            string    `json:"url"`
+	Short          string    `json:"short"`
+	Addedby        string    `json:"addedby"`
+	User           string    `json:"User"`
+	Clicks         string    `json:"clicks"`
+	Expiry         time.Time `json:"expiry"`
+	ExpiryDays     int       `json:"days"`
+	ExpiryAt       string    `json:"expiryat"`
+	ActivationTime int64     `json:"activation_from"`
 }
 
 type Response struct {

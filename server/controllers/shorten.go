@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 	"url-shortener/database"
@@ -13,13 +12,12 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func ShortTheURL(body models.Request) (string, models.Response, error) {
+func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, error) {
 
 	// check if the input is an actual URL
-	resp := models.Response{
+	resp := models.User_Url_Add_Response{
 		URL:   "",
 		Short: "",
 		// Expiry: 0,
@@ -82,25 +80,26 @@ func ShortTheURL(body models.Request) (string, models.Response, error) {
 	// body.Expiry = body.Expiry * 3600 * time.Second
 	body.Clicks = strconv.Itoa(0)
 
-	res, err := mdb.InsertOne(ctx, body)
+	// res, err := mdb.InsertOne(ctx, body)
+	_, err = mdb.InsertOne(ctx, body)
 	defer cancel()
 	if err != nil {
 		msg := "cannot connect to datavbase"
 		return msg, resp, err
 	}
 
-	resp = models.Response{
-		URL:      body.URL,
-		Short:    body.Short,
-		Expiry:   body.Expiry,
-		ExpiryAt: body.Expiry.Format(time.ANSIC),
-		// Expiry2: body.Expiry2,
+	resp = models.User_Url_Add_Response{
+		URL:            body.URL,
+		Short:          body.Short,
+		ExpiryAt:       body.Expiry.Format(time.ANSIC),
+		ActivationTime: time.Unix(body.ActivationTime, 0).Format(time.ANSIC),
 	}
 
 	// resp.URL_ID = primitive.NewObjectID().Hex()
 	// x := fmt.Sprint(res.InsertedID)
-	x, _ := res.InsertedID.(primitive.ObjectID)
-	resp.URL_ID = fmt.Sprint(x.Hex())
+
+	// x, _ := res.InsertedID.(primitive.ObjectID)
+	// resp.URL_ID = fmt.Sprint(x.Hex())
 
 	return "ok", resp, nil
 }
