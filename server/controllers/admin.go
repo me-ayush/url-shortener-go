@@ -33,25 +33,44 @@ func GetAllUsers() ([]primitive.M, string) {
 	return allUsers, "ok"
 }
 
-func GetAllLinks() ([]primitive.M, string) {
+func GetAllLinks() ([]models.Admin_Url_See_All_Response, string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	mdb := database.OpenCollection(database.Client, "shorten-urls")
 	result, err := mdb.Find(ctx, bson.D{})
 	defer cancel()
-	var allUsers []primitive.M
+	type x struct {
+		ID             primitive.ObjectID `bson:"_id" json:"id"`
+		URL_ID         string
+		URL            string
+		Short          string
+		User           string
+		Clicks         string
+		Expiry         time.Time
+		ActivationTime time.Time
+	}
+	var allLinks []models.Admin_Url_See_All_Response
 
 	if err != nil {
-		return allUsers, fmt.Sprint(err.Error())
+		return allLinks, fmt.Sprint(err.Error())
 	}
 
 	for result.Next(ctx) {
-		var ep bson.M
+		var ep x
+		var y models.Admin_Url_See_All_Response
 		if err = result.Decode(&ep); err != nil {
-			return allUsers, fmt.Sprint(err)
+			return allLinks, fmt.Sprint(err)
 		}
-		allUsers = append(allUsers, ep)
+		y.URL_ID = ep.ID.Hex()
+		y.User = ep.User
+		y.URL = ep.URL
+		y.Short = ep.Short
+		y.Clicks = ep.Clicks
+		y.ExpiryAt = ep.Expiry.Format(time.ANSIC)
+		y.ActivationTime = ep.ActivationTime.Format(time.ANSIC)
+
+		allLinks = append(allLinks, y)
 	}
-	return allUsers, "ok"
+	return allLinks, "ok"
 }
 
 func GetUserDetails(userid string) (models.User, string) {

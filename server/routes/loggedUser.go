@@ -157,7 +157,22 @@ func UserLinks(c *fiber.Ctx) error {
 
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	mdb := database.OpenCollection(database.Client, "shorten-urls")
-	var links []primitive.M
+	// var links []primitive.M
+
+	type x struct {
+		ID             primitive.ObjectID `bson:"_id" json:"id"`
+		URL_ID         string
+		URL            string
+		Short          string
+		Addedby        string
+		User           string
+		Clicks         string
+		Expiry         time.Time
+		ExpiryAt       string
+		ActivationTime time.Time
+	}
+
+	var links []models.User_Url_See_All_Response
 
 	cursor, err := mdb.Find(ctx, bson.M{"addedby": userId})
 	defer cancel()
@@ -166,14 +181,20 @@ func UserLinks(c *fiber.Ctx) error {
 	}
 
 	for cursor.Next(ctx) {
-		var episode bson.M
+		var episode x
+		var y models.User_Url_See_All_Response
 		if err = cursor.Decode(&episode); err != nil {
 			log.Fatal(err)
 		}
-		links = append(links, episode)
-	}
+		y.URL_ID = episode.ID.Hex()
+		y.URL = episode.URL
+		y.Short = episode.Short
+		y.Clicks = episode.Clicks
+		y.ExpiryAt = episode.Expiry.Format(time.ANSIC)
+		y.ActivationTime = episode.ActivationTime.Format(time.ANSIC)
 
-	// fmt.Println(links)
+		links = append(links, y)
+	}
 
 	return c.Status(fiber.StatusOK).JSON(links)
 }

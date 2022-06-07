@@ -70,21 +70,26 @@ const Myurl = () => {
 
 	const handleDelete = async (e) => {
 		e.preventDefault()
-		setLoading(true)
-		const url_id = e.target.value
-		const res = await fetch(`/user/${user_id}/delete/${url_id}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"token": token,
+		try{
+			setLoading(true)
+			const url_id = e.target.value
+			const res = await fetch(`/user/${user_id}/delete/${url_id}`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"token": token,
+				}
+			})
+			const data = await res.json()
+			setLoading(false)
+			if (res.status !== 200 || !data) {
+				swal(data.error, "", "error");
+			} else {
+				swal("Successfully Deleted", "", "success").then(() => { set_links() });
 			}
-		})
-		const data = await res.json()
-		setLoading(false)
-		if (res.status !== 200 || !data) {
-			swal(data.error, "", "error");
-		} else {
-			swal("Successfully Deleted", "", "success").then(() => { set_links() });
+		}catch(err){
+			setLoading(false)
+			swal("Something Went Wrong", "", "error");
 		}
 	}
 
@@ -125,6 +130,7 @@ const Myurl = () => {
 										<option value="url">URL</option>
 										<option value="short">Short</option>
 										<option value="clicks">Clicks</option>
+										<option value="activation_time">Activation Time</option>
 										<option value="expiryat">Expiry</option>
 									</select>
 								</div>
@@ -144,7 +150,8 @@ const Myurl = () => {
 								<th scope="col"><button className='btn text-light btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('url')}>URL</button></th>
 								<th scope="col"><button className='btn text-light btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('short')}>Short</button></th>
 								<th scope="col"><button className='btn text-light btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('clicks')}>Clicks</button></th>
-								<th scope="col"><button className='btn text-light btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('expiry')}>Expiry</button></th>
+								<th scope="col"><button className='btn text-light btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('activation_time')}>Activation Time</button></th>
+								<th scope="col"><button className='btn text-light btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('expiryat')}>Expiry</button></th>
 
 								{/* <th scope="col">URL</th>
 								<th scope="col">Short</th>
@@ -162,10 +169,11 @@ const Myurl = () => {
 									<td><a href={item.url} target="_blank">{item.url}</a></td>
 									<td><Link to={'/' + item.short} target="_blank">{item.short}</Link></td>
 									<td>{getMinute(item.clicks)}</td>
+									<td>{getMinute(item.activation_time)}</td>
 									<td>{getMinute(item.expiryat)}</td>
 									{/* <td className="column100 column6" data-column="column6">{item.rate_limit == 0 ? <>--</> : item.rate_limit}</td> */}
 									{/* <td className="column100 column7" data-column="column6">{item.rate_limit_reset == 0 ? <>--</> : item.rate_limit_reset}</td> */}
-									<td className='btn-c'><button className='btn btn-danger' value={item._id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
+									<td className='btn-c'><button className='btn btn-danger' value={item.url_id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
 								</tr>
 							))}
 						</tbody>

@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 	"url-shortener/database"
@@ -17,13 +16,12 @@ import (
 
 func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, error) {
 
-	// check if the input is an actual URL
 	resp := models.User_Url_Add_Response{
 		URL:   "",
 		Short: "",
-		// Expiry: 0,
 	}
 	err := *new(error)
+	// check if the input is an actual URL
 	if !govalidator.IsURL(body.URL) {
 		err = errors.New("invaild url")
 		msg := "Invalid URL"
@@ -40,9 +38,8 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 	// enforce https, SSL
 	body.URL = helpers.EnforceHTTP(body.URL)
 
+	// Create random 6 digit short
 	var id string
-
-	// fmt.Println(body)
 	if body.Short == "" {
 		id = uuid.New().String()[:6]
 		body.Short = id
@@ -50,13 +47,15 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 		id = body.Short
 	}
 
+	// Database connection
 	mdb := database.OpenCollection(database.Client, "shorten-urls")
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 
+	// checking if short already exists or not
 	count, err := mdb.CountDocuments(ctx, bson.M{"short": id})
 	defer cancel()
 	if err != nil {
-		msg := "cannot connect to datavbase"
+		msg := "cannot connect to database"
 		return msg, resp, err
 	}
 	if count > 0 {
@@ -65,9 +64,7 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 		return msg, resp, err
 	}
 
-	// if body.Expiry == 0 {
-	// 	body.Expiry = 24
-	// }
+	// adding expiry date
 	if body.ExpiryDays < 0 {
 		today := time.Now()
 		body.Expiry = today.Add(2 * 24 * time.Hour)
@@ -77,12 +74,15 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 		body.Expiry = convert_time_to_ist(body.Expiry)
 	}
 
+	// adding activation time
 	body.ActivationTime = convert_time_to_ist(body.ActivationTime)
 
 	// body.Expiry = body.Expiry * 3600 * time.Second
+
+	// Initializing clicks to 0
 	body.Clicks = strconv.Itoa(0)
 
-	// res, err := mdb.InsertOne(ctx, body)
+	// inserting data
 	_, err = mdb.InsertOne(ctx, body)
 	defer cancel()
 	if err != nil {
@@ -90,6 +90,7 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 		return msg, resp, err
 	}
 
+	// creating response
 	resp = models.User_Url_Add_Response{
 		URL:            body.URL,
 		Short:          body.Short,
@@ -109,6 +110,5 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 func convert_time_to_ist(curr_time time.Time) time.Time {
 	loc, _ := time.LoadLocation("Asia/Kolkata")
 	dataTime := curr_time.In(loc)
-	fmt.Println(dataTime)
 	return dataTime
 }

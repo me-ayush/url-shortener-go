@@ -132,6 +132,7 @@ const Alllinks = () => {
                                     <option value="url">URL</option>
                                     <option value="short">Short</option>
                                     <option value="clicks">Clicks</option>
+                                    <option value="activation_time">Activation Time</option>
                                     <option value="expiryat">Expiry</option>
                                 </select>
                             </div>
@@ -151,6 +152,7 @@ const Alllinks = () => {
                             <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('url')}>URL</button></th>
                             <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('short')}>Short</button></th>
                             <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('clicks')}>Clicks</button></th>
+                            <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('activation_time')}>Activation Time</button></th>
                             <th scope="col"><button className='btn btn-none p-0 m-0 shadow-none' onClick={() => handelSorting('expiryat')}>Expiry On</button></th>
 
                             {/* <th scope="col" onClick={() => setSortedField('user')}>Added By</th>
@@ -162,17 +164,18 @@ const Alllinks = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {!links ? <><tr><td colSpan="8" className='text-center fs-3'>No Links</td></tr></> : null}
+                        {!links ? <><tr><td colSpan="9" className='text-center fs-3'>No Links</td></tr></> : null}
                         {filteredData && filteredData.map((item, i) => (
                             <tr key={i}>
                                 <td>{i + 1}</td>
-                                <td>{item._id}</td>
+                                <td>{item.url_id}</td>
                                 <td>{item.user == "" || item.user == " " ? 'Unregistered' : item.user}</td>
                                 <td><a href={item.url} target="_blank">{item.url}</a></td>
                                 <td><Link to={'/' + item.short} target="_blank">{item.short}</Link></td>
                                 <td>{(item.clicks)}</td>
+                                <td>{(item.activation_time)}</td>
                                 <td>{(item.expiryat)}</td>
-                                <td className='btn-c'><button className='btn btn-danger' value={item._id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
+                                <td className='btn-c'><button className='btn btn-danger' value={item.url_id} onClick={(e) => handleDelete(e)}>Delete</button> </td>
                             </tr>
                         ))}
                     </tbody>

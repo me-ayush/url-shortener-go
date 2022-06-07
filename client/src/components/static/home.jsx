@@ -107,6 +107,7 @@ const Home = () => {
         body: JSON.stringify({
           "url": url,
           "short": custom,
+          "days": -1,
         })
       });
     } else {
