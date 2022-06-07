@@ -9,7 +9,6 @@ import (
 	"url-shortener/routes"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html"
@@ -69,7 +68,7 @@ func main() {
 	})
 
 	app.Use(logger.New())
-	app.Use(cache.New())
+	// app.Use(cache.New())
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "http://localhost:3001",
