@@ -62,8 +62,11 @@ const Home = () => {
     const tomorrow = new Date(today.getTime() + dayInMs);
     expiredAt = new Date(tomorrow).toLocaleTimeString('en-us', date_format)
 
-    setFinalActivationTime(new Date(activatedFrom).valueOf())
-    setFinalExpirationTime(new Date(expiredAt).valueOf())
+    // setFinalActivationTime(new Date(activatedFrom).valueOf())
+    // setFinalExpirationTime(new Date(expiredAt).valueOf())
+
+    setFinalActivationTime(new Date(activatedFrom).toISOString())
+    setFinalExpirationTime(new Date(expiredAt).toISOString())
 
     let x = 'Link Will Activated From ' + activatedFrom + ' => ' + expiredAt
     setLinkDet(x)
@@ -81,6 +84,9 @@ const Home = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault()
+
+    console.log(finalActivationTime);
+    console.log(finalExpirationTime);
 
     const regex = new RegExp('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
 
@@ -104,7 +110,7 @@ const Home = () => {
         })
       });
     } else {
-      if (days <= 0 || isNaN(days)) {
+      if (days < 0 || isNaN(days)) {
         swal("Invalid Expirys Days", "", "warning");
         setLoading(false)
         return

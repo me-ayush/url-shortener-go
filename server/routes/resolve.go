@@ -34,6 +34,10 @@ func ResolveURL(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Link Expired on ", "type": "expired"})
 	}
 
+	if urlDetail.ActivationTime.Unix() >= time.Now().Unix() {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Link Not Activated Yet ", "type": "not_activated"})
+	}
+
 	x, _ := strconv.Atoi(urlDetail.Clicks)
 	urlDetail.Clicks = strconv.Itoa(x + 1)
 

@@ -5,6 +5,7 @@ import './css/GetUrl.scss'
 const Geturl = () => {
   const [loading, setLoading] = useState(true)
   const [is404, setis404] = useState(true)
+  const [message, setMessage] = useState("")
   const { short } = useParams();
   const resolveUrl = async () => {
     const res = await fetch(`/geturl/${short}`, {
@@ -16,6 +17,7 @@ const Geturl = () => {
         setis404(true)
       } else {
         setis404(false)
+        setMessage(data.error)
       }
       setLoading(false)
     } else {
@@ -53,7 +55,7 @@ const Geturl = () => {
                   </>
                   :
                   <>
-                    <h2>Link Expired</h2>
+                    <h2>{message}</h2>
                   </>
 
               }

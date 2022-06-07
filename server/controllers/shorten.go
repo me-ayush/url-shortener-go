@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 	"url-shortener/database"
@@ -67,15 +68,16 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 	// if body.Expiry == 0 {
 	// 	body.Expiry = 24
 	// }
-	if body.ExpiryDays <= 0 {
+	if body.ExpiryDays < 0 {
 		today := time.Now()
 		body.Expiry = today.Add(2 * 24 * time.Hour)
 	} else {
-		today := time.Now()
-		body.Expiry = today.Add(time.Duration(body.ExpiryDays*24) * time.Hour)
+		// today := time.Now()
+		// body.Expiry = today.Add(time.Duration(body.ExpiryDays*24) * time.Hour)
+		body.Expiry = convert_time_to_ist(body.Expiry)
 	}
 
-	body.ExpiryAt = body.Expiry.Format(time.ANSIC)
+	body.ActivationTime = convert_time_to_ist(body.ActivationTime)
 
 	// body.Expiry = body.Expiry * 3600 * time.Second
 	body.Clicks = strconv.Itoa(0)
@@ -92,7 +94,7 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 		URL:            body.URL,
 		Short:          body.Short,
 		ExpiryAt:       body.Expiry.Format(time.ANSIC),
-		ActivationTime: time.Unix(body.ActivationTime, 0).Format(time.ANSIC),
+		ActivationTime: body.ActivationTime.Format(time.ANSIC),
 	}
 
 	// resp.URL_ID = primitive.NewObjectID().Hex()
@@ -102,4 +104,11 @@ func ShortTheURL(body models.Request) (string, models.User_Url_Add_Response, err
 	// resp.URL_ID = fmt.Sprint(x.Hex())
 
 	return "ok", resp, nil
+}
+
+func convert_time_to_ist(curr_time time.Time) time.Time {
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+	dataTime := curr_time.In(loc)
+	fmt.Println(dataTime)
+	return dataTime
 }
