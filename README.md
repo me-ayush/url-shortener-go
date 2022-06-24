@@ -1,6 +1,6 @@
 # url-shortener-go  
 
-[Visit Site](http://52.15.228.249:3001 "52.15.228.249:3001")
+[Visit Site](http://3.144.231.135:3001/ "3.144.231.135:3001")
 
 ## How To Run The Program
     
