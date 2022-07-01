@@ -8,6 +8,7 @@ import (
 	"url-shortener/controllers"
 	"url-shortener/database"
 	"url-shortener/helpers"
+	"url-shortener/mailer"
 	"url-shortener/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -70,9 +71,9 @@ func Signup(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "email already exists"})
 	}
 
-	otp := helpers.GetAuthString(200, fmt.Sprintf(*user.Email))
+	otp := mailer.GetAuthString(200, fmt.Sprintf(*user.Email))
 	verificationLink := fmt.Sprintf(os.Getenv("HOST") + "auth/activate/" + otp)
-	err = helpers.SendMail(*user.First_name+" "+*user.Last_Name, *user.Email, "Account Verification", verificationLink)
+	err = mailer.Send_Verification_Mail(*user.First_name+" "+*user.Last_Name, *user.Email, "Account Verification", verificationLink)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})

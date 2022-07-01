@@ -47,6 +47,8 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/signup", routes.Signup)
 	app.Post("/contact", routes.Contact)
 
+	app.Get("/test", routes.Test)
+
 }
 
 func main() {

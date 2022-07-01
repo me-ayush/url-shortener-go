@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 	"url-shortener/database"
-	"url-shortener/helpers"
+	"url-shortener/mailer"
 	"url-shortener/models"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -30,9 +30,9 @@ func SendNewActivationCode(email string) error {
 		return errors.New("user already activated")
 	}
 
-	otp := helpers.GetAuthString(200, fmt.Sprintf(*user.Email))
+	otp := mailer.GetAuthString(200, fmt.Sprintf(*user.Email))
 	verificationLink := fmt.Sprintf(os.Getenv("HOST") + "auth/activate/" + otp)
-	err := helpers.SendMail(*user.First_name+" "+*user.Last_Name, *user.Email, "Account Verification", verificationLink)
+	err := mailer.Send_Verification_Mail(*user.First_name+" "+*user.Last_Name, *user.Email, "Account Verification", verificationLink)
 
 	if err != nil {
 		return err
